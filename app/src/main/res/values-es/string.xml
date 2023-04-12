@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--on boarding texts-->
+    <string name="on_boarding_text_1">Encuentra en TMDB</string>
+    <string name="on_boarding_text_2">Conoce cuales son las peliculas y series del momento, y diviertete buscando contenido adecuado para ti.</string>
+    <string name="on_boarding_button_text">Siguiente</string>
+    <!--dashboard activity texts-->
+    <string name="logo">Logo</string>
+    <string name="home">Inicio</string>
+    <string name="top_rated">Las mejores</string>
+    <string name="latest">Recientes</string>
+    <string name="now_playing">En Cines</string>
+    <!--home fragment texts-->
+    <string name="info">Información</string>
+    <string name="top_rated_movies">Las mejor calificadas</string>
+    <string name="latest_movies">Las mas recientes</string>
+    <string name="now_playing_movies">Solo en cines</string>
+    <!--latest fragment texts-->
+    <string name="info_card_text">La información mostrada en este apartado es actualizada constantemente en tiempo real por lo que en algunas ocaciones puede llegar a no mostrar la información parcial o completamente.</string>
+    <!--top rated fragment texts-->
+    <string name="top_one">1</string>
+    <string name="top_two">2</string>
+    <string name="top_three">3</string>
+    <string name="next_positions">Siguientes posiciones</string>
+</resources>

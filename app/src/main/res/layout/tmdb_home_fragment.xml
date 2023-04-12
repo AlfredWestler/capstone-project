@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    tools:context=".presentation.modules.dashboard.screens.TMDBHomeFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/main_cover"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:background="@color/black"
+                android:contentDescription="@string/info"/>
+
+            <TextView
+                android:id="@+id/info_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/main_cover"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:text="@string/info"/>
+
+            <ImageView
+                android:id="@+id/info_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/info_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:src="@drawable/ic_info"
+                android:contentDescription="@string/info"/>
+
+            <TextView
+                android:id="@+id/genres_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@id/info_image"
+                android:layout_marginBottom="15dp"/>
+
+            <TextView
+                android:id="@+id/top_movies_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/main_cover"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:text="@string/top_rated_movies"
+                android:paddingHorizontal="10dp"
+                android:textColor="@color/white"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/top_movies_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/top_movies_text" />
+
+            <TextView
+                android:id="@+id/current_movies_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/top_movies_recycler"
+                android:layout_marginTop="20dp"
+                android:textSize="20sp"
+                android:text="@string/now_playing_movies"
+                android:paddingHorizontal="10dp"
+                android:textColor="@color/white"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/current_movies_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="20dp"
+                app:layoutManager="LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/current_movies_text"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

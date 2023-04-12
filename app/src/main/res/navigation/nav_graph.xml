@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/TMDBHomeFragment">
+
+    <fragment
+        android:id="@+id/TMDBHomeFragment"
+        android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBHomeFragment"
+        android:label="tmdb_home_fragment"
+        tools:layout="@layout/tmdb_home_fragment" />
+
+    <fragment
+        android:id="@+id/TMDBTopRatedFragment"
+        android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBTopRatedFragment"
+        android:label="tmdb_top_rated_fragment"
+        tools:layout="@layout/tmdb_top_rated_fragment" />
+
+    <fragment
+        android:id="@+id/TMDBLatestFragment"
+        android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBLatestFragment"
+        android:label="tmdb_latest_fragment"
+        tools:layout="@layout/tmdb_latest_fragment" />
+
+    <fragment
+        android:id="@+id/TMDBNowPlayingFragment"
+        android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBNowPlayingFragment"
+        android:label="tmdb_now_playing_fragment"
+        tools:layout="@layout/tmdb_now_playing_fragment" />
+</navigation>

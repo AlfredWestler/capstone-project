@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@id/TMDBHomeFragment"
+        android:icon="@drawable/ic_home_icon"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@id/TMDBTopRatedFragment"
+        android:icon="@drawable/ic_top_rated"
+        android:title="@string/top_rated"/>
+
+    <item
+        android:id="@id/TMDBLatestFragment"
+        android:icon="@drawable/ic_latest"
+        android:title="@string/latest"/>
+
+    <item
+        android:id="@id/TMDBNowPlayingFragment"
+        android:icon="@drawable/ic_now_playing"
+        android:title="@string/now_playing"/>
+
+</menu>
