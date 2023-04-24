@@ -10,10 +10,9 @@ import com.asgh.themoviedb.databinding.RecyclerItemBinding
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.squareup.picasso.Picasso
 
-class MoviesOrShowsAdapter: ListAdapter<TMDBMovie, MoviesOrShowsAdapter.MoviesOrShowsViewHolder>(
-    diffCallback){
-
+class MoviesOrShowsAdapter(
     private var onClick: (itemSelected: TMDBMovie) -> Unit = {}
+): ListAdapter<TMDBMovie, MoviesOrShowsAdapter.MoviesOrShowsViewHolder>(diffCallback) {
 
     companion object {
         val diffCallback = object: DiffUtil.ItemCallback<TMDBMovie>() {
@@ -39,14 +38,10 @@ class MoviesOrShowsAdapter: ListAdapter<TMDBMovie, MoviesOrShowsAdapter.MoviesOr
 
     class MoviesOrShowsViewHolder(private val binding: RecyclerItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(result: TMDBMovie){
-            val imageUrl = BuildConfig.IMAGE_URL + result.posterPath
+            val imageUrl = result.posterPath
             Picasso.get().load(imageUrl)
                 .fit()
                 .into(binding.posterImage)
         }
-    }
-
-    fun onItemClickListener(click: (TMDBMovie)-> Unit) {
-        onClick = click
     }
 }

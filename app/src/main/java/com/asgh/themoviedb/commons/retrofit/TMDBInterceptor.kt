@@ -1,10 +1,10 @@
 package com.asgh.themoviedb.commons.retrofit
 
-import android.util.Log
 import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.TMDBApplication
 import okhttp3.Interceptor
 import okhttp3.Response
+import timber.log.Timber
 import java.util.*
 
 class TMDBInterceptor: Interceptor {
@@ -26,8 +26,8 @@ class TMDBInterceptor: Interceptor {
                 .url(newUrl)
                 .build()
             val newResponse = chain.proceed(newRequest)
-            Log.d("Retrofit request", "${newRequest.method}\n${newRequest.url}")
-            Log.d("Retrofit response", "${newResponse.code}\n${newResponse.networkResponse}")
+            Timber.d("Retrofit request: ${newRequest.method}\n${newRequest.url}")
+            Timber.d("Retrofit response: ${newResponse.code}\n${newResponse.networkResponse}")
             return newResponse
         } else {
             val newUrl = originalUrl.newBuilder()

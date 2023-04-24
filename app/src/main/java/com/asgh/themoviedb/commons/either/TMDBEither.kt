@@ -6,21 +6,27 @@ sealed class TMDBEither<out S, out F> {
     data class Success<out S>(val success: S) : TMDBEither<S, Nothing>()
     data class Failure<out F>(val failure: F) : TMDBEither<Nothing, F>()
 
-    suspend fun <S, F> TMDBEither<S, F>.onLoading(fn: suspend () -> Unit) : TMDBEither<S, F> =
+    val isSuccess get() = this is Success<S>
+    inline fun onLoading(fn: () -> Unit): TMDBEither<S, F> =
         when (this){
             is Loading -> fn()
             else -> { /* PASS */ }
         }.let { this }
 
-    suspend fun <S, F> TMDBEither<S, F>.onSuccess(fn: suspend (S) -> Unit) : TMDBEither<S, F> =
-        when (this){
+    inline fun onSuccess(fn: (S) -> Unit) : TMDBEither<S, F> =
+        when(this) {
             is Success -> fn(success)
-            else -> { /* PASS */ }
+            else -> {/*PASS*/}
         }.let { this }
 
-    suspend fun <S, F> TMDBEither<S, F>.onFailure(fn: suspend (F) -> Unit) : TMDBEither<S, F> =
+
+    inline fun onFailure(fn: (F) -> Unit) : TMDBEither<S, F> =
         when (this){
             is Failure -> fn(failure)
             else -> { /* PASS */ }
         }.let { this }
+}
+
+fun <S,F> TMDBEither<S,F>?.isSuccess(): Boolean {
+    return this?.isSuccess ?: run { false }
 }

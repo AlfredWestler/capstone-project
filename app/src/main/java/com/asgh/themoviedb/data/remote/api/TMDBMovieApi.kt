@@ -1,5 +1,6 @@
 package com.asgh.themoviedb.data.remote.api
 
+import com.asgh.themoviedb.data.remote.response.TMDBGenresResponse
 import com.asgh.themoviedb.data.remote.response.TMDBLatestMovieResponse
 import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
 import io.reactivex.rxjava3.core.Observable
@@ -25,8 +26,7 @@ interface TMDBMovieApi {
     suspend fun getMoviesGenreList(
         @Path("type") type: String = TMDBApiInfoType.MOVIES.type,
         @Path("endPoint") endPoint: String = TMDBEndPoint.LIST.endPoint
-    ): Response<TMDBLatestMovieResponse>
-
+    ): Response<TMDBGenresResponse>
 
     /**----------------------------------RxJava Consumes------------------------------------------*/
 

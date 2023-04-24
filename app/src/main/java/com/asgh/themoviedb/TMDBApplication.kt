@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 
 @HiltAndroidApp
 class TMDBApplication: Application() {
@@ -16,5 +17,6 @@ class TMDBApplication: Application() {
         super.onCreate()
         appContext = applicationContext
         FirebaseApp.initializeApp(this)
+        Timber.plant(Timber.DebugTree())
     }
 }

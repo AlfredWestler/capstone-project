@@ -33,8 +33,11 @@
         <activity
             android:name=".presentation.modules.dashboard.TMDBDashboardActivity"
             android:exported="false"
-            android:theme="@style/LegacyTheme"
-            />
+            android:theme="@style/LegacyTheme" />
+        <activity
+            android:name=".presentation.modules.detail.TMDBDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.TheMovieDB" />
     </application>
 
 </manifest>

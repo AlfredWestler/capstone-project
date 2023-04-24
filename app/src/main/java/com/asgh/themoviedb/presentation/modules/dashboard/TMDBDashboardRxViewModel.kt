@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.commons.either.FailureModel
-import com.asgh.themoviedb.commons.either.ServiceState
+import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.commons.either.isSuccess
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.asgh.themoviedb.domain.model.TMDBMovie
@@ -26,12 +26,12 @@ class TMDBDashboardRxViewModel @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val _nowPlayingState = MutableLiveData<ServiceState<List<TMDBMovie>>>()
-    val nowPlayingState: LiveData<ServiceState<List<TMDBMovie>>> get() = _nowPlayingState
-    private val _topRatedState = MutableLiveData<ServiceState<List<TMDBMovie>>>()
-    val topRatedState: LiveData<ServiceState<List<TMDBMovie>>> get() = _topRatedState
-    private val _latestState = MutableLiveData<ServiceState<TMDBLatestMovie>>()
-    val latestState: LiveData<ServiceState<TMDBLatestMovie>> get() = _latestState
+    private val _nowPlayingState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
+    val nowPlayingState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _nowPlayingState
+    private val _topRatedState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
+    val topRatedState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _topRatedState
+    private val _latestState = MutableLiveData<TMDBEither<TMDBLatestMovie, FailureModel>>()
+    val latestState: LiveData<TMDBEither<TMDBLatestMovie, FailureModel>> get() = _latestState
 
     private val _toolbarTitle = MutableLiveData("")
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
@@ -43,14 +43,14 @@ class TMDBDashboardRxViewModel @Inject constructor(
     fun randomCover(list: List<TMDBMovie>): String {
         return if(list.isNotEmpty()) {
             val randomData = list.random()
-            BuildConfig.IMAGE_URL + randomData.posterPath
+            randomData.posterPath
         } else ""
     }
 
     fun randomBackdrop(list: List<TMDBMovie>): String {
         return if(list.isNotEmpty()) {
             val randomData = list.random()
-            BuildConfig.IMAGE_URL + randomData.backdropPath
+            randomData.backdropPath
         } else ""
     }
 
@@ -78,15 +78,15 @@ class TMDBDashboardRxViewModel @Inject constructor(
     }
 
     private fun getNowPlayingMoviesRx() {
-        _nowPlayingState.postValue(ServiceState.Loading)
+        _nowPlayingState.postValue(TMDBEither.Loading)
         val disposable = nowPlayingUseCase.getNowPlayingMoviesRx()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    _nowPlayingState.postValue(ServiceState.Success(it.toMovies()))
+                    _nowPlayingState.postValue(TMDBEither.Success(it.toMovies()))
                 },
                 {
-                    _nowPlayingState.postValue(ServiceState.Failure(
+                    _nowPlayingState.postValue(TMDBEither.Failure(
                         FailureModel("Looks like the aliens abducted this info")
                     ))
                 }
@@ -95,15 +95,15 @@ class TMDBDashboardRxViewModel @Inject constructor(
     }
 
     private fun getLatestMoviesRx() {
-        _latestState.postValue(ServiceState.Loading)
+        _latestState.postValue(TMDBEither.Loading)
         val disposable = latestUseCase.getLatestMoviesRx()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    _latestState.postValue(ServiceState.Success(it.toLatestMovie()))
+                    _latestState.postValue(TMDBEither.Success(it.toLatestMovie()))
                 },
                 {
-                    _latestState.postValue(ServiceState.Failure(
+                    _latestState.postValue(TMDBEither.Failure(
                         FailureModel(it.message.orEmpty())
                     ))
                 }
@@ -112,15 +112,15 @@ class TMDBDashboardRxViewModel @Inject constructor(
     }
 
     private fun getTopRatedMoviesRx() {
-        _topRatedState.postValue(ServiceState.Loading)
+        _topRatedState.postValue(TMDBEither.Loading)
         val disposable = topRatedUseCase.getTopRatedMoviesRx()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    _topRatedState.postValue(ServiceState.Success(it.toMovies()))
+                    _topRatedState.postValue(TMDBEither.Success(it.toMovies()))
                 },
                 {
-                    _topRatedState.postValue(ServiceState.Failure(
+                    _topRatedState.postValue(TMDBEither.Failure(
                         FailureModel(it.message.orEmpty())
                     ))
                 }

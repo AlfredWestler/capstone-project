@@ -7,15 +7,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
+import com.asgh.themoviedb.commons.internet.InternetConnectionVerifier
 import com.asgh.themoviedb.presentation.modules.login.screens.TMDBLoginScreen
 import com.asgh.themoviedb.presentation.ui.theme.TheMovieDBTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TMDBLoginActivity : ComponentActivity() {
-
+    @Inject
+    lateinit var internetConnectionVerifier: InternetConnectionVerifier
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        internetConnectionVerifier.observe(this) {
+            it
+        }
         setContent {
             TheMovieDBTheme {
                 Surface(

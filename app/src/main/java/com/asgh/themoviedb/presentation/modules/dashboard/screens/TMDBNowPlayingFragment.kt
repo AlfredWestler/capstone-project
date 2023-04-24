@@ -10,6 +10,7 @@ import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.R
 import com.asgh.themoviedb.databinding.TmdbNowPlayingFragmentBinding
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardRxViewModel
+import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.MovieDataItem
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.TMDBMoviesAdapter
 import com.squareup.picasso.Picasso
@@ -17,11 +18,12 @@ import com.squareup.picasso.Picasso
 class TMDBNowPlayingFragment : Fragment() {
 
     private lateinit var binding: TmdbNowPlayingFragmentBinding
-    private val vm: TMDBDashboardRxViewModel by activityViewModels()
+//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
+    private val vm: TMDBDashboardViewModel by activityViewModels()
 
     private val nowPlayingAdapter by lazy {
         TMDBMoviesAdapter {
-            val url = BuildConfig.IMAGE_URL + it.backdropPath
+            val url = it.backdropPath
             updateTheatreImage(url)
         }
     }
@@ -40,21 +42,21 @@ class TMDBNowPlayingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(vm) {
             nowPlayingState.observe(viewLifecycleOwner) {
-                it.onEach(
-                    onFailure = { failure ->
+                it.apply {
+                    onFailure { failure ->
                         nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
-                    },
-                    onLoading = {
+                    }
+                    onLoading {
                         val loadItem = (0..10).toList()
                         nowPlayingAdapter.submitList(loadItem.map { MovieDataItem.Loading })
-                    },
-                    onSuccess = { nowPlayingList ->
+                    }
+                    onSuccess { nowPlayingList ->
                         Picasso.get()
                             .load(vm.randomBackdrop(nowPlayingList))
                             .fit().into(binding.theatreImage)
                         nowPlayingAdapter.submitList(nowPlayingList.map { mapper -> MovieDataItem.Success(mapper) })
                     }
-                )
+                }
             }
         }
     }

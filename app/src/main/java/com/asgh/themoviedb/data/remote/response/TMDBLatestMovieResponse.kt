@@ -1,5 +1,7 @@
 package com.asgh.themoviedb.data.remote.response
 
+import com.asgh.themoviedb.BuildConfig
+import com.asgh.themoviedb.data.local.entity.TMDBLatestMovieEntity
 import com.asgh.themoviedb.data.remote.dto.TMDBGenreDto
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.squareup.moshi.Json
@@ -40,7 +42,32 @@ data class TMDBLatestMovieResponse(
         original_title = original_title.orEmpty(),
         overview = overview.orEmpty(),
         popularity = popularity ?: 0,
-        poster_path = poster_path.orEmpty(),
+        poster_path = "${BuildConfig.IMAGE_URL}$poster_path",
+        release_date = release_date.orEmpty(),
+        revenue = revenue ?: 0,
+        runtime = runtime ?: 0,
+        status = status.orEmpty(),
+        tagline = tagline.orEmpty(),
+        title = title.orEmpty(),
+        video = video ?: false,
+        vote_average = vote_average ?: 0,
+        vote_count = vote_count ?: 0,
+        status_message = status_message.orEmpty(),
+        status_code = status_code ?: 0
+    )
+
+    fun toLatestMovieEntity() = TMDBLatestMovieEntity(
+        id = 0,
+        adult = adult ?: false,
+        budget = budget ?: 0,
+        homepage = homepage.orEmpty(),
+        movieId = id ?: 0,
+        imdb_id = imdb_id.orEmpty(),
+        original_language = original_language.orEmpty(),
+        original_title = original_title.orEmpty(),
+        overview = overview.orEmpty(),
+        popularity = popularity ?: 0,
+        poster_path = "${BuildConfig.IMAGE_URL}$poster_path",
         release_date = release_date.orEmpty(),
         revenue = revenue ?: 0,
         runtime = runtime ?: 0,

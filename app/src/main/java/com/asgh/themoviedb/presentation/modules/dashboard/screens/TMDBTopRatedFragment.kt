@@ -10,6 +10,7 @@ import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.R
 import com.asgh.themoviedb.databinding.TmdbTopRatedFragmentBinding
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardRxViewModel
+import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.MovieDataItem
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.TMDBMoviesAdapter
 import com.squareup.picasso.Picasso
@@ -17,7 +18,8 @@ import com.squareup.picasso.Picasso
 class TMDBTopRatedFragment : Fragment() {
 
     private lateinit var binding: TmdbTopRatedFragmentBinding
-    private val vm: TMDBDashboardRxViewModel by activityViewModels()
+//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
+    private val vm: TMDBDashboardViewModel by activityViewModels()
 
     private val topAdapter by lazy { TMDBMoviesAdapter() }
 
@@ -35,24 +37,24 @@ class TMDBTopRatedFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(vm) {
             topRatedState.observe(viewLifecycleOwner) { state ->
-                state.onEach(
-                    onFailure = { failure ->
-                        topAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
-                    },
-                    onLoading = {
+                state.apply {
+                    onFailure {
+                        topAdapter.submitList(listOf(MovieDataItem.Failure(it.message)))
+                    }
+                    onLoading {
                         val loadItem = (0..10).toList()
                         topAdapter.submitList(loadItem.map { MovieDataItem.Loading })
-                    },
-                    onSuccess = { topList ->
+                    }
+                    onSuccess { topList ->
                         binding.apply {
                             Picasso.get()
-                                .load(BuildConfig.IMAGE_URL + topList[0].posterPath)
+                                .load(topList[0].posterPath)
                                 .fit().into(binding.topOneImage)
                             Picasso.get()
-                                .load(BuildConfig.IMAGE_URL + topList[1].posterPath)
+                                .load(topList[1].posterPath)
                                 .fit().into(binding.topTwoImage)
                             Picasso.get()
-                                .load(BuildConfig.IMAGE_URL + topList[2].posterPath)
+                                .load(topList[2].posterPath)
                                 .fit().into(binding.topThreeImage)
                         }
                         val newTopList = topList.subList(3, topList.size)
@@ -60,7 +62,7 @@ class TMDBTopRatedFragment : Fragment() {
                             newTopList.map { mapper -> MovieDataItem.Success(mapper) }
                         )
                     }
-                )
+                }
             }
         }
     }

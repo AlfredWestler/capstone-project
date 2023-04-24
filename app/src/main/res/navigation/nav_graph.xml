@@ -9,13 +9,23 @@
         android:id="@+id/TMDBHomeFragment"
         android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBHomeFragment"
         android:label="tmdb_home_fragment"
-        tools:layout="@layout/tmdb_home_fragment" />
+        tools:layout="@layout/tmdb_home_fragment">
+
+        <action
+            android:id="@+id/homeToDetailAction"
+            app:destination="@+id/TMDBDetailActivity" />
+    </fragment>
 
     <fragment
         android:id="@+id/TMDBTopRatedFragment"
         android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBTopRatedFragment"
         android:label="tmdb_top_rated_fragment"
-        tools:layout="@layout/tmdb_top_rated_fragment" />
+        tools:layout="@layout/tmdb_top_rated_fragment">
+
+        <action
+            android:id="@+id/topToDetailAction"
+            app:destination="@+id/TMDBDetailActivity" />
+    </fragment>
 
     <fragment
         android:id="@+id/TMDBLatestFragment"
@@ -27,5 +37,21 @@
         android:id="@+id/TMDBNowPlayingFragment"
         android:name="com.asgh.themoviedb.presentation.modules.dashboard.screens.TMDBNowPlayingFragment"
         android:label="tmdb_now_playing_fragment"
-        tools:layout="@layout/tmdb_now_playing_fragment" />
+        tools:layout="@layout/tmdb_now_playing_fragment">
+
+        <action
+            android:id="@+id/nowPlayingToDetailAction"
+            app:destination="@+id/TMDBDetailActivity" />
+    </fragment>
+
+    <activity
+        android:id="@+id/TMDBDetailActivity"
+        android:name="com.asgh.themoviedb.presentation.modules.detail.TMDBDetailActivity"
+        android:label="tmdb_detail_activity">
+
+        <argument
+            android:name="movie"
+            app:argType="string"
+            android:defaultValue="" />
+    </activity>
 </navigation>

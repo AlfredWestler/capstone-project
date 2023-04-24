@@ -1,5 +1,7 @@
 package com.asgh.themoviedb.data.remote.dto
 
+import com.asgh.themoviedb.BuildConfig
+import com.asgh.themoviedb.data.local.entity.TMDBMovieEntity
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.model.TMDBTvShow
 import com.squareup.moshi.Json
@@ -20,17 +22,18 @@ data class TMDBMovieSeriesResultDto(
     @Json(name = "vote_count") val vote_count : Int? = null,
     @Json(name = "first_air_date") val first_air_date : String? = null, //solo para tv
     @Json(name = "name") val name : String? = null, //solo para tv
-    @Json(name = "original_name") val original_name : String? = null //solo para tv
+    @Json(name = "original_name") val original_name : String? = null, //solo para tv
+    @Json(name = "genre_ids") val genre_ids : List<Int>? = null
 ) {
     fun toMovie(): TMDBMovie = TMDBMovie(
         adult = adult ?: false,
-        backdropPath = backdrop_path.orEmpty(),
+        backdropPath = "${BuildConfig.IMAGE_URL}$backdrop_path",
         id = id ?: 0,
         originalLanguage = original_language.orEmpty(),
         originalTitle = original_title.orEmpty(),
         overview = overview.orEmpty(),
         popularity = popularity ?: 0.0,
-        posterPath = poster_path.orEmpty(),
+        posterPath = "${BuildConfig.IMAGE_URL}$poster_path",
         releaseDate = release_date.orEmpty(),
         title = title.orEmpty(),
         video = video ?: false,
@@ -40,12 +43,12 @@ data class TMDBMovieSeriesResultDto(
 
     fun toTvShow(): TMDBTvShow = TMDBTvShow(
         adult = adult ?: false,
-        backdropPath = backdrop_path.orEmpty(),
+        backdropPath = "${BuildConfig.IMAGE_URL}$backdrop_path",
         id = id ?: 0,
         originalLanguage = original_language.orEmpty(),
         overview = overview.orEmpty(),
         popularity = popularity ?: 0.0,
-        posterPath = poster_path.orEmpty(),
+        posterPath = "${BuildConfig.IMAGE_URL}$poster_path",
         releaseDate = release_date.orEmpty(),
         video = video ?: false,
         voteAverage = vote_average ?: 0.0,
@@ -53,5 +56,22 @@ data class TMDBMovieSeriesResultDto(
         firstAirDate = first_air_date.orEmpty(),
         name = name.orEmpty(),
         originalName = original_name.orEmpty()
+    )
+
+    fun transformToEntity(type: String): TMDBMovieEntity = TMDBMovieEntity(
+        adult = adult ?: false,
+        backdropPath = "${BuildConfig.IMAGE_URL}$backdrop_path",
+        movieId = id ?: 0,
+        originalLanguage = original_language.orEmpty(),
+        originalTitle = original_title.orEmpty(),
+        overview = overview.orEmpty(),
+        popularity = popularity ?: 0.0,
+        posterPath = "${BuildConfig.IMAGE_URL}$poster_path",
+        releaseDate = release_date.orEmpty(),
+        title = title.orEmpty(),
+        video = video ?: false,
+        voteAverage = vote_average ?: 0.0,
+        voteCount = vote_count ?: 0,
+        type = type
     )
 }

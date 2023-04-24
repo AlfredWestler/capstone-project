@@ -1,6 +1,6 @@
 package com.asgh.themoviedb.domain.model
 
-import java.util.*
+import java.util.Date
 
 data class TMDBDates(
     val maximum : Date = Date(),

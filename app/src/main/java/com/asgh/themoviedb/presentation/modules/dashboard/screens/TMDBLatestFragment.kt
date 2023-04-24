@@ -10,13 +10,14 @@ import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.R
 import com.asgh.themoviedb.databinding.TmdbLatestFragmentBinding
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardRxViewModel
+import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.squareup.picasso.Picasso
 
 class TMDBLatestFragment : Fragment() {
 
     private lateinit var binding: TmdbLatestFragmentBinding
-    private val vm: TMDBDashboardRxViewModel by activityViewModels()
-
+//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
+    private val vm: TMDBDashboardViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -30,20 +31,18 @@ class TMDBLatestFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         with(vm) {
             latestState.observe(viewLifecycleOwner) { result ->
-                result.onEach(
-                    onFailure = {  },
-                    onLoading = {  },
-                    onSuccess = {
+                result.apply {
+                    onSuccess {
                         binding.apply {
                             Picasso.get()
-                                .load(BuildConfig.IMAGE_URL + it.poster_path)
+                                .load(it.poster_path)
                                 .fit().into(binding.mainCover)
                             tagsText.text = it.tags()
                             titleText.text = "${it.title} (${it.original_title})"
                             overviewText.text = it.overview
                         }
                     }
-                )
+                }
             }
         }
         binding.closeInfoBtn.setOnClickListener {

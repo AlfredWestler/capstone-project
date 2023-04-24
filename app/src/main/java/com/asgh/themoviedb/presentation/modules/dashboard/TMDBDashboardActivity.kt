@@ -7,16 +7,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.asgh.themoviedb.R
+import com.asgh.themoviedb.commons.internet.InternetConnectionVerifier
 import com.asgh.themoviedb.databinding.TmdbDashboardActivityBinding
 import com.asgh.themoviedb.presentation.modules.login.TMDBLoginActivity
 import com.firebase.ui.auth.AuthUI
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TMDBDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: TmdbDashboardActivityBinding
-    private val vm: TMDBDashboardRxViewModel by viewModels()
+//    private val vm: TMDBDashboardRxViewModel by viewModels()
+    private val vm: TMDBDashboardViewModel by viewModels()
+    @Inject lateinit var internetConnectionVerifier: InternetConnectionVerifier
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +31,9 @@ class TMDBDashboardActivity : AppCompatActivity() {
         val navController = host.navController
 
         binding.bottomNavigation.setupWithNavController(navController)
+        internetConnectionVerifier.observe(this) {
+            vm.setInternetConnectionEnabled(it)
+        }
 
         binding.moreBtn.setOnClickListener {
             AuthUI.getInstance().signOut(this).addOnCompleteListener {
