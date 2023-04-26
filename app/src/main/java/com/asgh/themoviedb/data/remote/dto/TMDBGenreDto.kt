@@ -1,5 +1,6 @@
 package com.asgh.themoviedb.data.remote.dto
 
+import com.asgh.themoviedb.data.local.entity.TMDBGenreEntity
 import com.asgh.themoviedb.domain.model.TMDBGenre
 import com.squareup.moshi.Json
 
@@ -10,5 +11,10 @@ data class TMDBGenreDto(
     fun toGenre() = TMDBGenre(
         id = id ?: 0,
         name = name ?: ""
+    )
+
+    fun toGenreEntity() = TMDBGenreEntity(
+        genreId = id ?: 0,
+        genreName = name ?: ""
     )
 }

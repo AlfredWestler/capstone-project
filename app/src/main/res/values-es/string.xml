@@ -22,4 +22,10 @@
     <string name="top_two">2</string>
     <string name="top_three">3</string>
     <string name="next_positions">Siguientes posiciones</string>
+    <!--service error message generic-->
+    <string name="generic_error_message">Parece que los aliens abdujeron está información</string>
+    <!--detail screen-->
+    <string name="reviews">Reseñas</string>
+    <string name="original_title">Titulo original</string>
+    <string name="genres">Genero(s)</string>
 </resources>

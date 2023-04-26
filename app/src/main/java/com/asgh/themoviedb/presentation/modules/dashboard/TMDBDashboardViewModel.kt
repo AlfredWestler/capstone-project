@@ -1,13 +1,13 @@
 package com.asgh.themoviedb.presentation.modules.dashboard
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.commons.either.FailureModel
-import com.asgh.themoviedb.commons.either.ServiceState
-import com.asgh.themoviedb.commons.either.isSuccess
+import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.use_case.TMDBLatestUseCase
@@ -29,12 +29,16 @@ class TMDBDashboardViewModel @Inject constructor(
     private val latestUseCase: TMDBLatestUseCase
 ): ViewModel() {
 
-    private val _nowPlayingState = MutableLiveData<ServiceState<List<TMDBMovie>>>()
-    val nowPlayingState: LiveData<ServiceState<List<TMDBMovie>>> get() = _nowPlayingState
-    private val _topRatedState = MutableLiveData<ServiceState<List<TMDBMovie>>>()
-    val topRatedState: LiveData<ServiceState<List<TMDBMovie>>> get() = _topRatedState
-    private val _latestState = MutableLiveData<ServiceState<TMDBLatestMovie>>()
-    val latestState: LiveData<ServiceState<TMDBLatestMovie>> get() = _latestState
+    private val _nowPlayingState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
+    val nowPlayingState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _nowPlayingState
+    private val _topRatedState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
+    val topRatedState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _topRatedState
+    private val _latestState = MutableLiveData<TMDBEither<TMDBLatestMovie, FailureModel>>()
+    val latestState: LiveData<TMDBEither<TMDBLatestMovie, FailureModel>> get() = _latestState
+
+    private val _internetConnectionEnabled = mutableStateOf(false)
+    private val firstTime = mutableStateOf(true)
+
     private val _toolbarTitle = MutableLiveData("")
     val toolbarTitle: LiveData<String> get() = _toolbarTitle
 
@@ -42,37 +46,29 @@ class TMDBDashboardViewModel @Inject constructor(
         _toolbarTitle.value = value
     }
 
-    fun randomCover(list: List<TMDBMovie>): String {
-        return if(list.isNotEmpty()) {
-            val randomData = list.random()
-            BuildConfig.IMAGE_URL + randomData.posterPath
-        } else ""
+    fun setInternetConnectionEnabled(value: Boolean) {
+        if(value != _internetConnectionEnabled.value || firstTime.value){
+            _internetConnectionEnabled.value = value
+            if(hasToConsume()) realGetAll()
+        }
     }
-
+    private fun hasToConsume():Boolean {
+        return if(firstTime.value) {
+            firstTime.value = false
+            true
+        } else _internetConnectionEnabled.value
+    }
+    fun randomItem(list: List<TMDBMovie>): TMDBMovie {
+        return if(list.isNotEmpty()) {
+            list.random()
+        } else TMDBMovie()
+    }
     fun randomBackdrop(list: List<TMDBMovie>): String {
         return if(list.isNotEmpty()) {
             val randomData = list.random()
-            BuildConfig.IMAGE_URL + randomData.backdropPath
+            randomData.backdropPath
         } else ""
     }
-
-    fun getAll() {
-        if(
-            !_nowPlayingState.value.isSuccess() &&
-            !_topRatedState.value.isSuccess() &&
-            !_latestState.value.isSuccess()
-        ) {
-            realGetAll()
-        } else {
-            when {
-                !_nowPlayingState.value.isSuccess() -> getNowPlayingMovies()
-                !_topRatedState.value.isSuccess() -> getTopRatedMovies()
-                !_latestState.value.isSuccess() -> getLatestMovies()
-                else -> { /*All services successfully consumed*/ }
-            }
-        }
-    }
-
     private fun realGetAll() {
         viewModelScope.launch(dispatcher) {
             val nowPlaying = async { getNowPlayingMovies() }
@@ -83,33 +79,30 @@ class TMDBDashboardViewModel @Inject constructor(
             latest.await()
         }
     }
-
     private fun getNowPlayingMovies() {
-        nowPlayingUseCase.getNowPlayingMoviesAsFlow().onEach { result ->
+        nowPlayingUseCase.getNowPlayingMoviesModified().onEach { result ->
             result.apply {
-                onLoading { _nowPlayingState.postValue(ServiceState.Loading) }
-                onFailure { _nowPlayingState.postValue(ServiceState.Failure(FailureModel(it))) }
-                onSuccess { _nowPlayingState.postValue(ServiceState.Success(it)) }
+                onLoading { _nowPlayingState.postValue(TMDBEither.Loading) }
+                onFailure { _nowPlayingState.postValue(TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _nowPlayingState.postValue(TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }
-
     private fun getTopRatedMovies() {
         topRatedUseCase.getTopRatedMoviesAsFlow().onEach { result ->
             result.apply {
-                onLoading { _topRatedState.postValue(ServiceState.Loading) }
-                onFailure { _topRatedState.postValue(ServiceState.Failure(FailureModel(it))) }
-                onSuccess { _topRatedState.postValue(ServiceState.Success(it)) }
+                onLoading { _topRatedState.postValue(TMDBEither.Loading) }
+                onFailure { _topRatedState.postValue(TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _topRatedState.postValue(TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }
-
     private fun getLatestMovies() {
         latestUseCase.getLatestAsFlow().onEach { result ->
             result.apply {
-                onLoading { _latestState.postValue(ServiceState.Loading) }
-                onFailure { _latestState.postValue(ServiceState.Failure(FailureModel(it))) }
-                onSuccess { _latestState.postValue(ServiceState.Success(it)) }
+                onLoading { _latestState.postValue(TMDBEither.Loading) }
+                onFailure { _latestState.postValue(TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _latestState.postValue(TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }

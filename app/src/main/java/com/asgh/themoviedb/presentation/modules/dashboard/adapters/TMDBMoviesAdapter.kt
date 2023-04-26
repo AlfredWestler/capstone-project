@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.asgh.themoviedb.BuildConfig
+import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.databinding.RecyclerFailureBinding
 import com.asgh.themoviedb.databinding.RecyclerItemBinding
 import com.asgh.themoviedb.databinding.RecyclerLoadingBinding
@@ -21,7 +22,7 @@ class TMDBMoviesAdapter(
         val diffCallback = object: DiffUtil.ItemCallback<MovieDataItem>() {
 
             override fun areItemsTheSame(oldItem: MovieDataItem, newItem: MovieDataItem): Boolean =
-                oldItem == newItem
+                oldItem.onSuccess()?.id == newItem.onSuccess()?.id
 
             override fun areContentsTheSame(oldItem: MovieDataItem, newItem: MovieDataItem): Boolean =
                 oldItem == newItem
@@ -76,7 +77,7 @@ class TMDBMoviesAdapter(
     ) : TMDBMoviesViewHolder(binding.root) {
 
         fun bind(item: MovieDataItem.Success) {
-            val imageUrl = BuildConfig.IMAGE_URL + item.movie.posterPath
+            val imageUrl = item.movie.posterPath
             Picasso.get().load(imageUrl)
                 .fit()
                 .into(binding.posterImage)
@@ -102,6 +103,15 @@ sealed class MovieDataItem {
     object Loading: MovieDataItem()
     class Failure(val message: String): MovieDataItem()
 
+    val isSuccess get() = this is Success
+    val isLoading get() = this is Loading
+    val isFailure get() = this is Failure
+
+    fun onSuccess(): TMDBMovie? =
+        when(this) {
+            is Success -> movie
+            else -> null
+        }
 }
 
 enum class MovieDataType {

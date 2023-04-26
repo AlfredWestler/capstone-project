@@ -1,47 +1,122 @@
 package com.asgh.themoviedb.data.repository
 
+import com.asgh.themoviedb.R
+import com.asgh.themoviedb.TMDBApplication
+import com.asgh.themoviedb.commons.either.TMDBEither
+import com.asgh.themoviedb.commons.internet.ConnectionVerifier
+import com.asgh.themoviedb.data.local.dao.TMDBCrossRefDao
+import com.asgh.themoviedb.data.local.dao.TMDBGenreDao
+import com.asgh.themoviedb.data.local.dao.TMDBLatestMovieDao
+import com.asgh.themoviedb.data.local.dao.TMDBMoviesDao
+import com.asgh.themoviedb.data.local.entity.toLatestMovie
+import com.asgh.themoviedb.data.local.entity.toMovie
+import com.asgh.themoviedb.data.local.relation.TMDBMovieWithGenres
+import com.asgh.themoviedb.data.local.relation.TMDBMoviesInGenre
 import com.asgh.themoviedb.data.remote.api.TMDBApiInfoType
 import com.asgh.themoviedb.data.remote.api.TMDBEndPoint
 import com.asgh.themoviedb.data.remote.api.TMDBMovieApi
+import com.asgh.themoviedb.data.remote.response.TMDBGenresResponse
 import com.asgh.themoviedb.data.remote.response.TMDBLatestMovieResponse
 import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
+import com.asgh.themoviedb.domain.model.TMDBLatestMovie
+import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.repository.TMDBRepository
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import retrofit2.Response
 import javax.inject.Inject
 
 class TMDBRepositoryImp @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val scheduler: Scheduler,
-    private val api: TMDBMovieApi
+    private val api: TMDBMovieApi,
+    private val moviesDao: TMDBMoviesDao,
+    private val genreDao: TMDBGenreDao,
+    private val latestMovieDao: TMDBLatestMovieDao,
+    private val crossRefDao: TMDBCrossRefDao,
+    private val internetVerifier: ConnectionVerifier
 ): TMDBRepository {
 
-    override suspend fun getNowPlayingMovies(): Response<TMDBMovieSeriesResponse> =
-        withContext(dispatcher) {
-            api.getMoviesOrSeries(
-                type = TMDBApiInfoType.MOVIES.type,
-                endPoint = TMDBEndPoint.NOW_PLAYING.endPoint
-            )
-        }
+    private var genresGotten = false
+    override fun getNowPlayingMovies(): Flow<TMDBEither<List<TMDBMovie>, String>> =
+        flow {
+            if (internetVerifier.hasInternetConnection()) {
+                val response = api.getMoviesOrSeries(
+                    type = TMDBApiInfoType.MOVIES.type,
+                    endPoint = TMDBEndPoint.NOW_PLAYING.endPoint
+                )
+                response.onStatusListener(
+                    success = {
+                        saveMoviesInDB(it, TMDBEndPoint.NOW_PLAYING.endPoint)
+                        emit(TMDBEither.Success(it?.toMovies() ?: emptyList()))
+                    },
+                    failure = { emit(TMDBEither.Failure(it)) }
+                )
+            } else {
+                val movies = getMovies(TMDBEndPoint.NOW_PLAYING.endPoint)
+                if(movies.isEmpty()){
+                    emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message)))
+                } else {
+                    emit(TMDBEither.Success(movies))
+                }
+            }
+        }.flowOn(dispatcher)
+    override fun getTopRatedMovies(): Flow<TMDBEither<List<TMDBMovie>, String>> =
+        flow {
+            if(internetVerifier.hasInternetConnection()) {
+                val response = api.getMoviesOrSeries(
+                    type = TMDBApiInfoType.MOVIES.type,
+                    endPoint = TMDBEndPoint.TOP_RATED.endPoint
+                )
+                response.onStatusListener(
+                    success = {
+                        saveMoviesInDB(it, TMDBEndPoint.TOP_RATED.endPoint)
+                        emit(TMDBEither.Success(it?.toMovies() ?: emptyList()))
+                    },
+                    failure = { emit(TMDBEither.Failure(it)) }
+                )
+            } else {
+                val movies = getMovies(TMDBEndPoint.TOP_RATED.endPoint)
+                if(movies.isEmpty()){
+                    emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message)))
+                } else {
+                    emit(TMDBEither.Success(movies))
+                }
+            }
+        }.flowOn(dispatcher)
 
-    override suspend fun getLatestMovies(): Response<TMDBLatestMovieResponse> =
-        withContext(dispatcher) {
-            api.getLatestMoviesOrSeries(
-                type = TMDBApiInfoType.MOVIES.type,
-                endPoint = TMDBEndPoint.LATEST.endPoint
-            )
+    override fun getLatestMovies(): Flow<TMDBEither<TMDBLatestMovie, String>> =
+        flow {
+            if(internetVerifier.hasInternetConnection()) {
+                val response = api.getLatestMoviesOrSeries(
+                    type = TMDBApiInfoType.MOVIES.type,
+                    endPoint = TMDBEndPoint.LATEST.endPoint
+                )
+                response.onStatusListener(
+                    success = {
+                        saveLatestMovieInDB(it)
+                        emit(TMDBEither.Success(it?.toLatestMovie() ?: TMDBLatestMovie()))
+                    },
+                    failure = { emit(TMDBEither.Failure(it)) }
+                )
+            } else {
+                emit(TMDBEither.Success(getLatestMovie()))
+            }
+        }.flowOn(dispatcher)
+    private suspend fun getGenres() {
+        if(!genresGotten) {
+            val response = api.getMoviesGenreList()
+            if (response.isSuccessful) {
+                val data = response.body()
+                saveGenresInDB(data)
+            }
+            genresGotten = true
         }
-
-    override suspend fun getTopRatedMovies(): Response<TMDBMovieSeriesResponse> =
-        withContext(dispatcher) {
-            api.getMoviesOrSeries(
-                type = TMDBApiInfoType.MOVIES.type,
-                endPoint = TMDBEndPoint.TOP_RATED.endPoint
-            )
-        }
+    }
 
     /**------------------------------RxJava implementations---------------------------------------*/
 
@@ -64,5 +139,92 @@ class TMDBRepositoryImp @Inject constructor(
             type = TMDBApiInfoType.MOVIES.type,
             endPoint = TMDBEndPoint.TOP_RATED.endPoint
         ).subscribeOn(scheduler)
+    }
+
+    /**------------------------------Data base implementations------------------------------------*/
+
+    override fun getMovieWithGenres(movieId: Int): Flow<TMDBEither<TMDBMovieWithGenres, String>> =
+        flow<TMDBEither<TMDBMovieWithGenres, String>> {
+            emit(TMDBEither.Success(moviesDao.getMovieWithGenres(movieId)))
+        }.flowOn(dispatcher)
+
+    override fun getMoviesInGenre(genreId: Int): Flow<TMDBEither<List<TMDBMoviesInGenre>, String>> =
+        flow<TMDBEither<List<TMDBMoviesInGenre>, String>> {
+            emit(TMDBEither.Success(genreDao.getMoviesInGenre(genreId)))
+        }.flowOn(dispatcher)
+
+    private fun saveGenresInDB(data: TMDBGenresResponse?) {
+        CoroutineScope(dispatcher).launch {
+            val insertGenres = async {
+                data?.let {
+                    val genreList = it.toGenresEntity()
+                    genreList.forEach { genre ->
+                        genreDao.insertGenre(genre)
+                    }
+                }
+            }
+            insertGenres.await()
+        }
+    }
+
+    private fun saveLatestMovieInDB(data: TMDBLatestMovieResponse?) {
+        CoroutineScope(dispatcher).launch {
+            val insertLatest = async {
+                data?.let {
+                    val latestMovie = it.toLatestMovieEntity()
+                    latestMovieDao.insertLatestMovie(latestMovie)
+                }
+            }
+            insertLatest.await()
+        }
+    }
+    private suspend fun saveMoviesInDB(data: TMDBMovieSeriesResponse?, type: String) {
+        getGenres()
+        val insertMovies = coroutineScope {
+            async {
+                data?.let {
+                    val moviesList = it.toMovieEntity(type)
+                    moviesList.forEach {movie ->
+                        moviesDao.insertMovie(movie)
+                    }
+                }
+            }
+        }
+        val insertCrossRef = coroutineScope {
+            async {
+                data?.let {
+                    val crossRefList = it.toCrossRefEntity()
+                    crossRefList.forEach { crossRef ->
+                        crossRefDao.insertCrossRef(crossRef)
+                    }
+                }
+            }
+        }
+        insertMovies.await()
+        insertCrossRef.await()
+    }
+
+    private suspend fun getLatestMovie(): TMDBLatestMovie {
+        return withContext(dispatcher) {
+            val latestMovie = async { latestMovieDao.getLatestMovie() }
+            latestMovie.await().toLatestMovie()
+        }
+    }
+    private suspend fun getMovies(type: String): List<TMDBMovie> {
+        return withContext(dispatcher) {
+            val movies = async { moviesDao.getMovies(type) }
+            movies.await().map { it.toMovie() }
+        }
+    }
+}
+
+suspend fun <T> Response<T>.onStatusListener(
+    success: suspend (T?) -> Unit,
+    failure: suspend (String) -> Unit
+) {
+    if(this.isSuccessful){
+        success(this.body())
+    } else {
+        failure(TMDBApplication.appContext.getString(R.string.generic_error_message))
     }
 }

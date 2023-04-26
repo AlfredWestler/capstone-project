@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.gms.google-services'
+    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -13,12 +14,12 @@ android {
     secretProperties.load(new FileInputStream(secretPropertiesFile))
 
     namespace 'com.asgh.themoviedb'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.asgh.themoviedb"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -67,7 +68,7 @@ android {
         viewBinding true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.1'
+        kotlinCompilerExtensionVersion '1.2.0-rc02'
     }
     packagingOptions {
         resources {
@@ -133,8 +134,8 @@ dependencies {
     implementation 'com.google.accompanist:accompanist-systemuicontroller:0.17.0'
 
     //Navigation
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.5'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.5'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
     //Rounded images
     implementation 'com.makeramen:roundedimageview:2.3.0'
@@ -148,4 +149,13 @@ dependencies {
 
     // Kotlin extensions for RxJava
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
+
+    // Timber
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    //Room
+    implementation "androidx.room:room-runtime:2.5.1"
+    kapt "androidx.room:room-compiler:2.5.1"
+    implementation "androidx.room:room-ktx:2.5.1"
+    testImplementation "androidx.room:room-testing:2.5.1"
 }

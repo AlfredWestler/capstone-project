@@ -3,7 +3,7 @@ package com.asgh.themoviedb.data.remote.dto
 import com.asgh.themoviedb.domain.model.TMDBDates
 import com.squareup.moshi.Json
 import java.time.Instant
-import java.util.*
+import java.util.Date
 
 data class TMDBDatesDto(
     @Json(name = "maximum") val maximum : String? = null,

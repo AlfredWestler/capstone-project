@@ -1,5 +1,7 @@
 package com.asgh.themoviedb.data.remote.response
 
+import com.asgh.themoviedb.data.local.entity.TMDBMovieEntity
+import com.asgh.themoviedb.data.local.entity.TMDBMovieGenreCrossRefEntity
 import com.asgh.themoviedb.data.remote.dto.TMDBDatesDto
 import com.asgh.themoviedb.data.remote.dto.TMDBMovieSeriesResultDto
 import com.asgh.themoviedb.domain.model.TMDBMovie
@@ -17,11 +19,32 @@ data class TMDBMovieSeriesResponse(
 ) {
 
     fun toMovies(): List<TMDBMovie> {
-//        val u = results?.asSequence()?.map { it.toMovie() } // TODO: Implementar sequencias en lugar de list
         return results?.map { it.toMovie() } ?: emptyList()
     }
 
     fun toTvShows(): List<TMDBTvShow> {
         return results?.map { it.toTvShow() } ?: emptyList()
+    }
+
+    fun toMovieEntity(type: String): List<TMDBMovieEntity> {
+        //type is now_playing or top_rated
+        return results?.map {
+            it.transformToEntity(type)
+        } ?: emptyList()
+    }
+
+    fun toCrossRefEntity(): List<TMDBMovieGenreCrossRefEntity> {
+        val aux = mutableListOf<TMDBMovieGenreCrossRefEntity>()
+        results?.forEach {movie ->
+            movie.genre_ids?.forEach {genreId ->
+                aux.add(
+                    TMDBMovieGenreCrossRefEntity(
+                        genreId = genreId,
+                        movieId = movie.id ?: 0
+                    )
+                )
+            }
+        }
+        return aux
     }
 }
