@@ -1,6 +1,5 @@
 package com.asgh.themoviedb.presentation.modules.dashboard
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,6 +15,8 @@ import com.asgh.themoviedb.domain.use_case.TMDBTopRatedUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -29,12 +30,12 @@ class TMDBDashboardViewModel @Inject constructor(
     private val latestUseCase: TMDBLatestUseCase
 ): ViewModel() {
 
-    private val _nowPlayingState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
-    val nowPlayingState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _nowPlayingState
-    private val _topRatedState = MutableLiveData<TMDBEither<List<TMDBMovie>, FailureModel>>()
-    val topRatedState: LiveData<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _topRatedState
-    private val _latestState = MutableLiveData<TMDBEither<TMDBLatestMovie, FailureModel>>()
-    val latestState: LiveData<TMDBEither<TMDBLatestMovie, FailureModel>> get() = _latestState
+    private val _nowPlayingState = MutableStateFlow<TMDBEither<List<TMDBMovie>, FailureModel>>(TMDBEither.Loading)
+    val nowPlayingState : StateFlow<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _nowPlayingState
+    private val _topRatedState = MutableStateFlow<TMDBEither<List<TMDBMovie>, FailureModel>>(TMDBEither.Loading)
+    val topRatedState: StateFlow<TMDBEither<List<TMDBMovie>, FailureModel>> get() = _topRatedState
+    private val _latestState = MutableStateFlow<TMDBEither<TMDBLatestMovie, FailureModel>>(TMDBEither.Loading)
+    val latestState: StateFlow<TMDBEither<TMDBLatestMovie, FailureModel>> get() = _latestState
 
     private val _internetConnectionEnabled = mutableStateOf(false)
     private val firstTime = mutableStateOf(true)
@@ -82,27 +83,27 @@ class TMDBDashboardViewModel @Inject constructor(
     private fun getNowPlayingMovies() {
         nowPlayingUseCase.getNowPlayingMoviesModified().onEach { result ->
             result.apply {
-                onLoading { _nowPlayingState.postValue(TMDBEither.Loading) }
-                onFailure { _nowPlayingState.postValue(TMDBEither.Failure(FailureModel(it))) }
-                onSuccess { _nowPlayingState.postValue(TMDBEither.Success(it)) }
+                onLoading { _nowPlayingState.value = (TMDBEither.Loading) }
+                onFailure { _nowPlayingState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _nowPlayingState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }
     private fun getTopRatedMovies() {
         topRatedUseCase.getTopRatedMoviesAsFlow().onEach { result ->
             result.apply {
-                onLoading { _topRatedState.postValue(TMDBEither.Loading) }
-                onFailure { _topRatedState.postValue(TMDBEither.Failure(FailureModel(it))) }
-                onSuccess { _topRatedState.postValue(TMDBEither.Success(it)) }
+                onLoading { _topRatedState.value = (TMDBEither.Loading) }
+                onFailure { _topRatedState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _topRatedState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }
     private fun getLatestMovies() {
         latestUseCase.getLatestAsFlow().onEach { result ->
             result.apply {
-                onLoading { _latestState.postValue(TMDBEither.Loading) }
-                onFailure { _latestState.postValue(TMDBEither.Failure(FailureModel(it))) }
-                onSuccess { _latestState.postValue(TMDBEither.Success(it)) }
+                onLoading { _latestState.value = (TMDBEither.Loading) }
+                onFailure { _latestState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onSuccess { _latestState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
     }

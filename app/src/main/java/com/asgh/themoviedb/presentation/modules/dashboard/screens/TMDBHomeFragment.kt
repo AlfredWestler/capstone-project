@@ -6,13 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.asgh.themoviedb.BuildConfig
-import com.asgh.themoviedb.R
 import com.asgh.themoviedb.commons.converters.toJson
 import com.asgh.themoviedb.databinding.TmdbHomeFragmentBinding
 import com.asgh.themoviedb.domain.model.TMDBMovie
-import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardRxViewModel
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.MovieDataItem
 import com.asgh.themoviedb.presentation.modules.dashboard.adapters.TMDBMoviesAdapter
@@ -46,42 +44,46 @@ class TMDBHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(vm) {
-            topRatedState.observe(viewLifecycleOwner) {
-                it.apply {
-                    onFailure { failure ->
-                        topAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
-                    }
-                    onLoading {
-                        val loadItem = (0..10).toList()
-                        topAdapter.submitList(loadItem.map { MovieDataItem.Loading })
-                    }
-                    onSuccess { topList ->
-                        topAdapter.submitList(topList.map { mapper -> MovieDataItem.Success(mapper) })
+            lifecycleScope.launchWhenCreated {
+                topRatedState.collect {
+                    it.apply {
+                        onFailure { failure ->
+                            topAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
+                        }
+                        onLoading {
+                            val loadItem = (0..10).toList()
+                            topAdapter.submitList(loadItem.map { MovieDataItem.Loading })
+                        }
+                        onSuccess { topList ->
+                            topAdapter.submitList(topList.map { mapper -> MovieDataItem.Success(mapper) })
+                        }
                     }
                 }
             }
-            nowPlayingState.observe(viewLifecycleOwner) {
-                it.apply {
-                    onFailure { failure ->
-                        nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
-                    }
-                    onLoading {
-                        val loadItem = (0..10).toList()
-                        nowPlayingAdapter.submitList(loadItem.map { MovieDataItem.Loading })
-                    }
-                    onSuccess { nowPlayingList ->
-                        val randomData = vm.randomItem(nowPlayingList)
-                        Picasso.get()
-                            .load(randomData.posterPath)
-                            .fit().into(binding.mainCover)
-                        binding.mainCover.setOnClickListener {
-                            navigateToDetail(randomData)
+            lifecycleScope.launchWhenStarted {
+                nowPlayingState.collect {
+                    it.apply {
+                        onFailure { failure ->
+                            nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
                         }
-                        nowPlayingAdapter.submitList(nowPlayingList.map { mapper ->
-                            MovieDataItem.Success(
-                                mapper
-                            )
-                        })
+                        onLoading {
+                            val loadItem = (0..10).toList()
+                            nowPlayingAdapter.submitList(loadItem.map { MovieDataItem.Loading })
+                        }
+                        onSuccess { nowPlayingList ->
+                            val randomData = vm.randomItem(nowPlayingList)
+                            Picasso.get()
+                                .load(randomData.posterPath)
+                                .fit().into(binding.mainCover)
+                            binding.mainCover.setOnClickListener {
+                                navigateToDetail(randomData)
+                            }
+                            nowPlayingAdapter.submitList(nowPlayingList.map { mapper ->
+                                MovieDataItem.Success(
+                                    mapper
+                                )
+                            })
+                        }
                     }
                 }
             }
