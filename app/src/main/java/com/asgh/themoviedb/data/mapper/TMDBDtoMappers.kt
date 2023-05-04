@@ -1,22 +1,13 @@
 package com.asgh.themoviedb.data.mapper
 
 import com.asgh.themoviedb.BuildConfig
-import com.asgh.themoviedb.domain.model.TMDBDates
 import com.asgh.themoviedb.domain.model.TMDBGenre
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.model.TMDBTvShow
 import com.example.local.entity.TMDBGenreEntity
 import com.example.local.entity.TMDBMovieEntity
-import com.example.remote.dto.TMDBDatesDto
 import com.example.remote.dto.TMDBGenreDto
 import com.example.remote.dto.TMDBMovieSeriesResultDto
-import java.time.Instant
-import java.util.*
-
-fun TMDBDatesDto.toDates(): TMDBDates = TMDBDates(
-    maximum = Date.from(Instant.parse(maximum)),
-    minimum = Date.from(Instant.parse(minimum))
-)
 
 fun TMDBGenreDto.toGenre() = TMDBGenre(
     id = id ?: 0,

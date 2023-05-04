@@ -1,7 +1,5 @@
 package com.asgh.themoviedb.domain.use_case
 
-import com.asgh.themoviedb.R
-import com.asgh.themoviedb.TMDBApplication
 import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.repository.TMDBRepository
@@ -17,5 +15,5 @@ class TMDBMovieUseCase @Inject constructor(
     operator fun invoke(id: Int): Flow<TMDBEither<TMDBMovie, String>> = flow {
         emit(TMDBEither.Loading)
         repository.getMovieById(id).collect { emit(it) }
-    }.catch { emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message))) }
+    }.catch { emit(TMDBEither.Failure("")) }
 }
