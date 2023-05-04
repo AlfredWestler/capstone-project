@@ -17,7 +17,6 @@ import com.squareup.picasso.Picasso
 class TMDBTopRatedFragment : Fragment() {
 
     private lateinit var binding: TmdbTopRatedFragmentBinding
-//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
     private val vm: TMDBDashboardViewModel by activityViewModels()
 
     private val topAdapter by lazy { TMDBMoviesAdapter() }

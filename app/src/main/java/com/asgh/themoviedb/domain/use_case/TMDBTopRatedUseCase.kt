@@ -1,9 +1,7 @@
 package com.asgh.themoviedb.domain.use_case
 
-import com.asgh.themoviedb.R
-import com.asgh.themoviedb.TMDBApplication
 import com.asgh.themoviedb.commons.either.TMDBEither
-import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
+import com.example.remote.response.TMDBMovieSeriesResponse
 import com.asgh.themoviedb.domain.repository.TMDBRepository
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.flow.catch

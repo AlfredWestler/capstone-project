@@ -1,8 +1,8 @@
-package com.asgh.themoviedb.data.remote.api
+package com.example.remote.api
 
-import com.asgh.themoviedb.data.remote.response.TMDBGenresResponse
-import com.asgh.themoviedb.data.remote.response.TMDBLatestMovieResponse
-import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
+import com.example.remote.response.TMDBGenresResponse
+import com.example.remote.response.TMDBLatestMovieResponse
+import com.example.remote.response.TMDBMovieSeriesResponse
 import io.reactivex.rxjava3.core.Observable
 import retrofit2.Response
 import retrofit2.http.GET

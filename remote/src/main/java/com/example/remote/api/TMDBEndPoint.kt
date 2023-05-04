@@ -1,4 +1,4 @@
-package com.asgh.themoviedb.data.remote.api
+package com.example.remote.api
 
 enum class TMDBEndPoint(val endPoint: String) {
     NOW_PLAYING("now_playing"),

@@ -1,7 +1,7 @@
 package com.asgh.themoviedb.commons.utils
 
-import com.asgh.themoviedb.data.remote.dto.TMDBMovieSeriesResultDto
-import com.asgh.themoviedb.data.remote.response.TMDBLatestMovieResponse
+import com.example.remote.dto.TMDBMovieSeriesResultDto
+import com.example.remote.response.TMDBLatestMovieResponse
 import com.example.local.entity.TMDBMovieEntity
 
 object TestUtils {

@@ -167,4 +167,5 @@ dependencies {
 
     //Modules
     implementation project(path: ':local')
+    implementation project(path: ':remote')
 }

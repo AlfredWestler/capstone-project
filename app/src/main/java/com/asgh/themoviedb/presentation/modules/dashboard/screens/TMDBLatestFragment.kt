@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso
 class TMDBLatestFragment : Fragment() {
 
     private lateinit var binding: TmdbLatestFragmentBinding
-//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
     private val vm: TMDBDashboardViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

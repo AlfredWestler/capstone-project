@@ -18,7 +18,6 @@ import javax.inject.Inject
 class TMDBDashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: TmdbDashboardActivityBinding
-//    private val vm: TMDBDashboardRxViewModel by viewModels()
     private val vm: TMDBDashboardViewModel by viewModels()
     @Inject lateinit var internetConnectionVerifier: InternetConnectionVerifier
 

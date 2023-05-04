@@ -17,7 +17,6 @@ import com.squareup.picasso.Picasso
 class TMDBNowPlayingFragment : Fragment() {
 
     private lateinit var binding: TmdbNowPlayingFragmentBinding
-//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
     private val vm: TMDBDashboardViewModel by activityViewModels()
 
     private val nowPlayingAdapter by lazy {

@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.asgh.themoviedb.BuildConfig
-import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.databinding.RecyclerFailureBinding
 import com.asgh.themoviedb.databinding.RecyclerItemBinding
 import com.asgh.themoviedb.databinding.RecyclerLoadingBinding
@@ -102,10 +100,6 @@ sealed class MovieDataItem {
     class Success(val movie: TMDBMovie): MovieDataItem()
     object Loading: MovieDataItem()
     class Failure(val message: String): MovieDataItem()
-
-    val isSuccess get() = this is Success
-    val isLoading get() = this is Loading
-    val isFailure get() = this is Failure
 
     fun onSuccess(): TMDBMovie? =
         when(this) {

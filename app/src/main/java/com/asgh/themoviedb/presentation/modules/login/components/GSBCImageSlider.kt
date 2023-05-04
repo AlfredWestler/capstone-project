@@ -1,8 +1,10 @@
 package com.asgh.themoviedb.presentation.modules.login.components
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.palette.graphics.Palette
 import com.asgh.themoviedb.R
 import com.skydoves.landscapist.glide.GlideImage
@@ -38,15 +39,15 @@ fun TMDBImageCarousel(
 
     LaunchedEffect(Unit) {
         while (true) {
-            visible = false //solo se muestra el previo ironman
-            delay(5000) // visible por 5s
+            visible = false
+            delay(5000)
             initial.value = false
-            visible = true // iron man se queda en segundo plano y se muestra dartvader con fade in
-            delay(1000) // delay de la animacion
+            visible = true
+            delay(1000)
             currentImageColor(Color(palette?.dominantSwatch?.rgb ?: 0))
             delay(2000)
             visible = false
-            Collections.rotate(imageList, -1) // se rota la lista
+            Collections.rotate(imageList, -1)
             maintainPosition = 0
             delay(1000)
             maintainPosition = 1
@@ -88,8 +89,3 @@ fun TMDBImageCarousel(
         }
     }
 }
-
-@Preview
-@Composable
-fun PreviewImageSlider() { TMDBImageCarousel() }
-

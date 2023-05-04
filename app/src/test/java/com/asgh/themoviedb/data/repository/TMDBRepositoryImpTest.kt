@@ -4,7 +4,9 @@ import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.commons.internet.ConnectionVerifier
 import com.asgh.themoviedb.commons.utils.TestUtils
 import com.asgh.themoviedb.data.mapper.toLatestMovie
+import com.asgh.themoviedb.data.mapper.toLatestMovieEntity
 import com.asgh.themoviedb.data.mapper.toMovie
+import com.asgh.themoviedb.data.mapper.toMovies
 import com.example.local.dao.TMDBCrossRefDao
 import com.example.local.dao.TMDBGenreDao
 import com.example.local.dao.TMDBLatestMovieDao
@@ -13,10 +15,10 @@ import com.example.local.entity.TMDBGenreEntity
 import com.example.local.entity.TMDBMovieEntity
 import com.example.local.relation.TMDBMovieWithGenres
 import com.example.local.relation.TMDBMoviesInGenre
-import com.asgh.themoviedb.data.remote.api.TMDBApiInfoType
-import com.asgh.themoviedb.data.remote.api.TMDBEndPoint
-import com.asgh.themoviedb.data.remote.api.TMDBMovieApi
-import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
+import com.example.remote.api.TMDBApiInfoType
+import com.example.remote.api.TMDBEndPoint
+import com.example.remote.api.TMDBMovieApi
+import com.example.remote.response.TMDBMovieSeriesResponse
 import com.google.common.truth.Truth
 import io.mockk.clearAllMocks
 import io.mockk.coEvery
@@ -35,13 +37,13 @@ import retrofit2.Response
 @OptIn(ExperimentalCoroutinesApi::class)
 class TMDBRepositoryImpTest {
 
-    val api = mockk<TMDBMovieApi>(relaxed = true)
-    val moviesDao = mockk<TMDBMoviesDao>(relaxed = true)
-    val genreDao = mockk<TMDBGenreDao>(relaxed = true)
-    val latestMovieDao = mockk<TMDBLatestMovieDao>(relaxed = true)
-    val crossRefDao = mockk<TMDBCrossRefDao>(relaxed = true)
-    val internetVerifier = mockk<ConnectionVerifier>(relaxed = true)
-    lateinit var sut: TMDBRepositoryImp
+    private val api = mockk<TMDBMovieApi>(relaxed = true)
+    private val moviesDao = mockk<TMDBMoviesDao>(relaxed = true)
+    private val genreDao = mockk<TMDBGenreDao>(relaxed = true)
+    private val latestMovieDao = mockk<TMDBLatestMovieDao>(relaxed = true)
+    private val crossRefDao = mockk<TMDBCrossRefDao>(relaxed = true)
+    private val internetVerifier = mockk<ConnectionVerifier>(relaxed = true)
+    private lateinit var sut: TMDBRepositoryImp
     
     @Before
     fun setUp() {

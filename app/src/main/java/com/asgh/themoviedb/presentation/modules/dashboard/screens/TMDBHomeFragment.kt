@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.asgh.themoviedb.commons.converters.toJson
 import com.asgh.themoviedb.databinding.TmdbHomeFragmentBinding
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
@@ -21,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class TMDBHomeFragment : Fragment() {
 
     private lateinit var binding: TmdbHomeFragmentBinding
-//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
     private val vm: TMDBDashboardViewModel by activityViewModels()
 
     private val topAdapter by lazy {
