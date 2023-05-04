@@ -96,8 +96,7 @@ class TMDBHomeFragment : Fragment() {
     }
 
     private fun navigateToDetail(movie: TMDBMovie) {
-        val action = TMDBHomeFragmentDirections.homeToDetailAction()
-        action.movie = toJson(movie)
+        val action = TMDBHomeFragmentDirections.homeToDetailAction(/*toJson(movie)*/movie.id.toString())
         findNavController().navigate(action)
     }
 }

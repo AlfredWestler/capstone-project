@@ -4,14 +4,14 @@ import com.asgh.themoviedb.R
 import com.asgh.themoviedb.TMDBApplication
 import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.commons.internet.ConnectionVerifier
-import com.asgh.themoviedb.data.local.dao.TMDBCrossRefDao
-import com.asgh.themoviedb.data.local.dao.TMDBGenreDao
-import com.asgh.themoviedb.data.local.dao.TMDBLatestMovieDao
-import com.asgh.themoviedb.data.local.dao.TMDBMoviesDao
-import com.asgh.themoviedb.data.local.entity.toLatestMovie
-import com.asgh.themoviedb.data.local.entity.toMovie
-import com.asgh.themoviedb.data.local.relation.TMDBMovieWithGenres
-import com.asgh.themoviedb.data.local.relation.TMDBMoviesInGenre
+import com.asgh.themoviedb.data.mapper.toLatestMovie
+import com.asgh.themoviedb.data.mapper.toMovie
+import com.example.local.dao.TMDBCrossRefDao
+import com.example.local.dao.TMDBGenreDao
+import com.example.local.dao.TMDBLatestMovieDao
+import com.example.local.dao.TMDBMoviesDao
+import com.example.local.relation.TMDBMovieWithGenres
+import com.example.local.relation.TMDBMoviesInGenre
 import com.asgh.themoviedb.data.remote.api.TMDBApiInfoType
 import com.asgh.themoviedb.data.remote.api.TMDBEndPoint
 import com.asgh.themoviedb.data.remote.api.TMDBMovieApi
@@ -59,7 +59,7 @@ class TMDBRepositoryImp @Inject constructor(
             } else {
                 val movies = getMovies(TMDBEndPoint.NOW_PLAYING.endPoint)
                 if(movies.isEmpty()){
-                    emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message)))
+                    emit(TMDBEither.Failure(""))
                 } else {
                     emit(TMDBEither.Success(movies))
                 }
@@ -82,7 +82,7 @@ class TMDBRepositoryImp @Inject constructor(
             } else {
                 val movies = getMovies(TMDBEndPoint.TOP_RATED.endPoint)
                 if(movies.isEmpty()){
-                    emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message)))
+                    emit(TMDBEither.Failure(""))
                 } else {
                     emit(TMDBEither.Success(movies))
                 }
@@ -104,7 +104,8 @@ class TMDBRepositoryImp @Inject constructor(
                     failure = { emit(TMDBEither.Failure(it)) }
                 )
             } else {
-                emit(TMDBEither.Success(getLatestMovie()))
+                val movie = getLatestMovie()
+                if(movie != null) emit(TMDBEither.Success(movie)) else emit(TMDBEither.Failure(""))
             }
         }.flowOn(dispatcher)
     private suspend fun getGenres() {
@@ -144,13 +145,33 @@ class TMDBRepositoryImp @Inject constructor(
     /**------------------------------Data base implementations------------------------------------*/
 
     override fun getMovieWithGenres(movieId: Int): Flow<TMDBEither<TMDBMovieWithGenres, String>> =
-        flow<TMDBEither<TMDBMovieWithGenres, String>> {
-            emit(TMDBEither.Success(moviesDao.getMovieWithGenres(movieId)))
+        flow {
+            val movieWithGenres = moviesDao.getMovieWithGenres(movieId)
+            movieWithGenres?.let {
+                emit(TMDBEither.Success(it))
+            } ?: run {
+                emit(TMDBEither.Failure(""))
+            }
         }.flowOn(dispatcher)
 
     override fun getMoviesInGenre(genreId: Int): Flow<TMDBEither<List<TMDBMoviesInGenre>, String>> =
-        flow<TMDBEither<List<TMDBMoviesInGenre>, String>> {
-            emit(TMDBEither.Success(genreDao.getMoviesInGenre(genreId)))
+        flow {
+            val movieList = genreDao.getMoviesInGenre(genreId)
+            movieList?.let {
+                emit(TMDBEither.Success(it))
+            } ?: run {
+                emit(TMDBEither.Failure(""))
+            }
+        }.flowOn(dispatcher)
+
+    override fun getMovieById(id: Int): Flow<TMDBEither<TMDBMovie, String>> =
+        flow {
+            val movie = getMovie(id)
+            movie?.let {
+                emit(TMDBEither.Success(it))
+            } ?: run {
+                emit(TMDBEither.Failure(""))
+            }
         }.flowOn(dispatcher)
 
     private fun saveGenresInDB(data: TMDBGenresResponse?) {
@@ -204,16 +225,23 @@ class TMDBRepositoryImp @Inject constructor(
         insertCrossRef.await()
     }
 
-    private suspend fun getLatestMovie(): TMDBLatestMovie {
+    private suspend fun getLatestMovie(): TMDBLatestMovie? {
         return withContext(dispatcher) {
             val latestMovie = async { latestMovieDao.getLatestMovie() }
-            latestMovie.await().toLatestMovie()
+            latestMovie.await()?.toLatestMovie()
         }
     }
     private suspend fun getMovies(type: String): List<TMDBMovie> {
         return withContext(dispatcher) {
             val movies = async { moviesDao.getMovies(type) }
             movies.await().map { it.toMovie() }
+        }
+    }
+
+    private suspend fun getMovie(id:Int): TMDBMovie? {
+        return withContext(dispatcher) {
+            val movie = async { moviesDao.getMovie(id) }
+            movie.await()?.toMovie()
         }
     }
 }

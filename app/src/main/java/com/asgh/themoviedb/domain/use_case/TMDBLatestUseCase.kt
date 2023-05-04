@@ -17,5 +17,5 @@ class TMDBLatestUseCase @Inject constructor(
     fun getLatestAsFlow() = flow {
         emit(TMDBEither.Loading)
         repository.getLatestMovies().collect{ emit(it) }
-    }.catch { emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message))) }
+    }.catch { emit(TMDBEither.Failure("")) }
 }

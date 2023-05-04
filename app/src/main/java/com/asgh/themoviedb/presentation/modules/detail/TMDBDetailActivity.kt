@@ -23,9 +23,11 @@ class TMDBDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val safeArgs by navArgs<TMDBDetailActivityArgs>()
-        val movie = safeArgs.movie.fromJson(TMDBMovie::class.java) ?: TMDBMovie() // store this info in vm
+//        val movie = safeArgs.movie.fromJson(TMDBMovie::class.java) ?: TMDBMovie() // store this info in vm
+        val movie = safeArgs.movie.toInt()
 
-        vm.setSelectedMovie(movie)
+//        vm.setSelectedMovie(movie)
+        vm.getMovieById(movie)
 
         setContent {
             TheMovieDBTheme {

@@ -1,6 +1,6 @@
 package com.asgh.themoviedb.data.remote.dto
 
-import com.asgh.themoviedb.data.local.entity.TMDBGenreEntity
+import com.example.local.entity.TMDBGenreEntity
 import com.asgh.themoviedb.domain.model.TMDBGenre
 import com.squareup.moshi.Json
 

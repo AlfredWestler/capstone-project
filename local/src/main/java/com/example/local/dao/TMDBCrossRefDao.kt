@@ -1,9 +1,9 @@
-package com.asgh.themoviedb.data.local.dao
+package com.example.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import com.asgh.themoviedb.data.local.entity.TMDBMovieGenreCrossRefEntity
+import com.example.local.entity.TMDBMovieGenreCrossRefEntity
 
 @Dao
 interface TMDBCrossRefDao {

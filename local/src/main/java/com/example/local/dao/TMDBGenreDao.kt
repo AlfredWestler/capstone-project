@@ -1,8 +1,8 @@
-package com.asgh.themoviedb.data.local.dao
+package com.example.local.dao
 
 import androidx.room.*
-import com.asgh.themoviedb.data.local.entity.TMDBGenreEntity
-import com.asgh.themoviedb.data.local.relation.TMDBMoviesInGenre
+import com.example.local.entity.TMDBGenreEntity
+import com.example.local.relation.TMDBMoviesInGenre
 
 @Dao
 interface TMDBGenreDao {
@@ -14,5 +14,5 @@ interface TMDBGenreDao {
 
     @Transaction
     @Query("SELECT * FROM genre_table WHERE genreId LIKE :genreId")
-    fun getMoviesInGenre(genreId: Int): List<TMDBMoviesInGenre>
+    fun getMoviesInGenre(genreId: Int): List<TMDBMoviesInGenre>?
 }

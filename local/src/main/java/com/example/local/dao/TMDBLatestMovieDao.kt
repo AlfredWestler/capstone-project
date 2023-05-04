@@ -1,10 +1,10 @@
-package com.asgh.themoviedb.data.local.dao
+package com.example.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.asgh.themoviedb.data.local.entity.TMDBLatestMovieEntity
+import com.example.local.entity.TMDBLatestMovieEntity
 
 @Dao
 interface TMDBLatestMovieDao {
@@ -12,5 +12,5 @@ interface TMDBLatestMovieDao {
     suspend fun insertLatestMovie(movie: TMDBLatestMovieEntity)
 
     @Query("SELECT * FROM latest_movie_table WHERE id LIKE :id")
-    fun getLatestMovie(id: Int = 0): TMDBLatestMovieEntity
+    fun getLatestMovie(id: Int = 0): TMDBLatestMovieEntity?
 }

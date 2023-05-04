@@ -1,11 +1,11 @@
-package com.asgh.themoviedb.data.local.relation
+package com.example.local.relation
 
 import androidx.room.Embedded
 import androidx.room.Junction
 import androidx.room.Relation
-import com.asgh.themoviedb.data.local.entity.TMDBGenreEntity
-import com.asgh.themoviedb.data.local.entity.TMDBMovieEntity
-import com.asgh.themoviedb.data.local.entity.TMDBMovieGenreCrossRefEntity
+import com.example.local.entity.TMDBGenreEntity
+import com.example.local.entity.TMDBMovieEntity
+import com.example.local.entity.TMDBMovieGenreCrossRefEntity
 
 data class TMDBMovieWithGenres(
     @Embedded val movie: TMDBMovieEntity,

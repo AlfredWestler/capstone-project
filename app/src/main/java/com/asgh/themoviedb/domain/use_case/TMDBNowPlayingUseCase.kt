@@ -19,5 +19,5 @@ class TMDBNowPlayingUseCase @Inject constructor(
     fun getNowPlayingMoviesModified() = flow {
         emit(TMDBEither.Loading)
         repository.getNowPlayingMovies().collect { emit(it) }
-    }.catch { emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message))) }
+    }.catch { emit(TMDBEither.Failure("")) }
 }

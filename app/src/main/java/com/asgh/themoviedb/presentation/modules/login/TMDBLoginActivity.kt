@@ -15,13 +15,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TMDBLoginActivity : ComponentActivity() {
-    @Inject
-    lateinit var internetConnectionVerifier: InternetConnectionVerifier
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        internetConnectionVerifier.observe(this) {
-            it
-        }
         setContent {
             TheMovieDBTheme {
                 Surface(

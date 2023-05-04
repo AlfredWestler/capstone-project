@@ -18,5 +18,5 @@ class TMDBTopRatedUseCase @Inject constructor(
     fun getTopRatedMoviesAsFlow() = flow {
         emit(TMDBEither.Loading)
         repository.getTopRatedMovies().collect{ emit(it) }
-    }.catch { emit(TMDBEither.Failure(TMDBApplication.appContext.getString(R.string.generic_error_message))) }
+    }.catch { emit(TMDBEither.Failure("")) }
 }

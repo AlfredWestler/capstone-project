@@ -1,8 +1,8 @@
 package com.asgh.themoviedb.domain.repository
 
 import com.asgh.themoviedb.commons.either.TMDBEither
-import com.asgh.themoviedb.data.local.relation.TMDBMovieWithGenres
-import com.asgh.themoviedb.data.local.relation.TMDBMoviesInGenre
+import com.example.local.relation.TMDBMovieWithGenres
+import com.example.local.relation.TMDBMoviesInGenre
 import com.asgh.themoviedb.data.remote.response.TMDBLatestMovieResponse
 import com.asgh.themoviedb.data.remote.response.TMDBMovieSeriesResponse
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
@@ -17,6 +17,8 @@ interface TMDBRepository {
 
     fun getMovieWithGenres(movieId: Int): Flow<TMDBEither<TMDBMovieWithGenres, String>>
     fun getMoviesInGenre(genreId: Int): Flow<TMDBEither<List<TMDBMoviesInGenre>, String>>
+
+    fun getMovieById(id:Int): Flow<TMDBEither<TMDBMovie, String>>
 
     /**----------------------------------RxJava functions-----------------------------------------*/
 

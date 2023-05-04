@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.asgh.themoviedb.R
+import com.asgh.themoviedb.TMDBApplication
 import com.asgh.themoviedb.commons.either.FailureModel
 import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
@@ -84,7 +86,9 @@ class TMDBDashboardViewModel @Inject constructor(
         nowPlayingUseCase.getNowPlayingMoviesModified().onEach { result ->
             result.apply {
                 onLoading { _nowPlayingState.value = (TMDBEither.Loading) }
-                onFailure { _nowPlayingState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onFailure { _nowPlayingState.value = (TMDBEither.Failure(FailureModel(
+                    TMDBApplication.appContext.getString(R.string.generic_error_message)
+                ))) }
                 onSuccess { _nowPlayingState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
@@ -93,7 +97,9 @@ class TMDBDashboardViewModel @Inject constructor(
         topRatedUseCase.getTopRatedMoviesAsFlow().onEach { result ->
             result.apply {
                 onLoading { _topRatedState.value = (TMDBEither.Loading) }
-                onFailure { _topRatedState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onFailure { _topRatedState.value = (TMDBEither.Failure(FailureModel(
+                    TMDBApplication.appContext.getString(R.string.generic_error_message)
+                ))) }
                 onSuccess { _topRatedState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)
@@ -102,7 +108,9 @@ class TMDBDashboardViewModel @Inject constructor(
         latestUseCase.getLatestAsFlow().onEach { result ->
             result.apply {
                 onLoading { _latestState.value = (TMDBEither.Loading) }
-                onFailure { _latestState.value = (TMDBEither.Failure(FailureModel(it))) }
+                onFailure { _latestState.value = (TMDBEither.Failure(FailureModel(
+                    TMDBApplication.appContext.getString(R.string.generic_error_message)
+                ))) }
                 onSuccess { _latestState.value = (TMDBEither.Success(it)) }
             }
         }.launchIn(viewModelScope)

@@ -1,17 +1,15 @@
 package com.asgh.themoviedb.di
 
 import android.app.Application
-import android.content.Context
 import androidx.room.Room
-import com.asgh.themoviedb.data.local.TMDBDatabase
-import com.asgh.themoviedb.data.local.dao.TMDBCrossRefDao
-import com.asgh.themoviedb.data.local.dao.TMDBGenreDao
-import com.asgh.themoviedb.data.local.dao.TMDBLatestMovieDao
-import com.asgh.themoviedb.data.local.dao.TMDBMoviesDao
+import com.example.local.TMDBDatabase
+import com.example.local.dao.TMDBCrossRefDao
+import com.example.local.dao.TMDBGenreDao
+import com.example.local.dao.TMDBLatestMovieDao
+import com.example.local.dao.TMDBMoviesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 

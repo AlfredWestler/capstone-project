@@ -1,7 +1,7 @@
 package com.asgh.themoviedb.data.remote.response
 
 import com.asgh.themoviedb.BuildConfig
-import com.asgh.themoviedb.data.local.entity.TMDBLatestMovieEntity
+import com.example.local.entity.TMDBLatestMovieEntity
 import com.asgh.themoviedb.data.remote.dto.TMDBGenreDto
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.squareup.moshi.Json

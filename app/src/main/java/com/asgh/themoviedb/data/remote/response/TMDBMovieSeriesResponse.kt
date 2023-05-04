@@ -1,7 +1,7 @@
 package com.asgh.themoviedb.data.remote.response
 
-import com.asgh.themoviedb.data.local.entity.TMDBMovieEntity
-import com.asgh.themoviedb.data.local.entity.TMDBMovieGenreCrossRefEntity
+import com.example.local.entity.TMDBMovieEntity
+import com.example.local.entity.TMDBMovieGenreCrossRefEntity
 import com.asgh.themoviedb.data.remote.dto.TMDBDatesDto
 import com.asgh.themoviedb.data.remote.dto.TMDBMovieSeriesResultDto
 import com.asgh.themoviedb.domain.model.TMDBMovie

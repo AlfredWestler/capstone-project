@@ -1,6 +1,6 @@
 package com.asgh.themoviedb.domain.model
 
-import com.asgh.themoviedb.data.local.entity.TMDBMovieEntity
+import com.example.local.entity.TMDBMovieEntity
 
 data class TMDBMovie(
     val adult : Boolean = false,

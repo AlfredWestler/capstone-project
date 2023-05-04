@@ -1,4 +1,4 @@
-package com.asgh.themoviedb.data.local.entity
+package com.example.local.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
