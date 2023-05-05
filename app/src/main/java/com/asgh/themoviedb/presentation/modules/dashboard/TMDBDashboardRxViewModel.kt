@@ -88,7 +88,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _nowPlayingState.postValue(TMDBEither.Failure(
-                        FailureModel("Looks like the aliens abducted this info")
+                        FailureModel(0)
                     ))
                 }
             )
@@ -105,7 +105,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _latestState.postValue(TMDBEither.Failure(
-                        FailureModel(it.message.orEmpty())
+                        FailureModel(0)
                     ))
                 }
             )
@@ -122,7 +122,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _topRatedState.postValue(TMDBEither.Failure(
-                        FailureModel(it.message.orEmpty())
+                        FailureModel(0)
                     ))
                 }
             )

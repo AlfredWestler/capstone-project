@@ -1,4 +1,7 @@
 package com.asgh.themoviedb.commons.either
+
+import android.support.annotation.StringRes
+
 data class FailureModel(
-    val message: String
+    /*@StringRes */val message: Int
 )

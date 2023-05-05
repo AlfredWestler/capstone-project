@@ -38,7 +38,7 @@ class TMDBTopRatedFragment : Fragment() {
                 topRatedState.collect { state ->
                     state.apply {
                         onFailure {
-                            topAdapter.submitList(listOf(MovieDataItem.Failure(it.message)))
+                            topAdapter.submitList(listOf(MovieDataItem.Failure(requireContext().getString(it.message))))
                         }
                         onLoading {
                             val loadItem = (0..10).toList()

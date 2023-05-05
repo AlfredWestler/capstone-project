@@ -46,7 +46,7 @@ class TMDBHomeFragment : Fragment() {
                 topRatedState.collect {
                     it.apply {
                         onFailure { failure ->
-                            topAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
+                            topAdapter.submitList(listOf(MovieDataItem.Failure(requireContext().getString(failure.message))))
                         }
                         onLoading {
                             val loadItem = (0..10).toList()
@@ -62,7 +62,7 @@ class TMDBHomeFragment : Fragment() {
                 nowPlayingState.collect {
                     it.apply {
                         onFailure { failure ->
-                            nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
+                            nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(requireContext().getString(failure.message))))
                         }
                         onLoading {
                             val loadItem = (0..10).toList()

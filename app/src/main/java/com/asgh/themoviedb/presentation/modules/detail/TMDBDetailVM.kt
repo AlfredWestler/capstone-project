@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.asgh.themoviedb.data.mapper.toGenre
@@ -20,8 +21,11 @@ import javax.inject.Inject
 class TMDBDetailVM @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val useCase: TMDBGenreUseCase,
-    private val movieUseCase: TMDBMovieUseCase
+    private val movieUseCase: TMDBMovieUseCase,
+    private val savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
+    var movieId = savedStateHandle.get<String>("movie")
 
     private val _selectedMovie = mutableStateOf(TMDBMovie())
     val selectedMovie : State<TMDBMovie> get() = _selectedMovie

@@ -43,7 +43,7 @@ class TMDBNowPlayingFragment : Fragment() {
                 nowPlayingState.collect {
                     it.apply {
                         onFailure { failure ->
-                            nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(failure.message)))
+                            nowPlayingAdapter.submitList(listOf(MovieDataItem.Failure(requireContext().getString(failure.message))))
                         }
                         onLoading {
                             val loadItem = (0..10).toList()
