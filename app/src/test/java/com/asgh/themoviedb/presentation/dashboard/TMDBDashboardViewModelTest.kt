@@ -1,10 +1,6 @@
 package com.asgh.themoviedb.presentation.dashboard
 
-import android.app.Application
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
 import com.asgh.themoviedb.R
 import com.asgh.themoviedb.commons.either.FailureModel
 import com.asgh.themoviedb.commons.either.TMDBEither
@@ -16,13 +12,13 @@ import com.asgh.themoviedb.domain.use_case.TMDBTopRatedUseCase
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.google.common.truth.Truth
 import io.mockk.MockKAnnotations
+import io.mockk.clearAllMocks
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.*
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -44,13 +40,17 @@ class TMDBDashboardViewModelTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
     }
 
+    @After
+    fun tearDown() {
+        clearAllMocks()
+    }
+
     @Test
     fun `poner un titulo al toolbar`() {
         //given
         val title = "titulo del toolbar"
         //when
         sut.setToolbarTitle(title)
-        TestCoroutineScope().advanceUntilIdle()
 
         //then
         val titleLiveData = sut.toolbarTitle.value

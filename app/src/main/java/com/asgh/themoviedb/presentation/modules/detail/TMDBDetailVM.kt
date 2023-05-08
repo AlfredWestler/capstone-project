@@ -25,7 +25,7 @@ class TMDBDetailVM @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
-    var movieId = savedStateHandle.get<String>("movie")
+//    var movieId = savedStateHandle.get<String>("movie")
 
     private val _selectedMovie = mutableStateOf(TMDBMovie())
     val selectedMovie : State<TMDBMovie> get() = _selectedMovie
