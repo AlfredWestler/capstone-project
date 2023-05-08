@@ -28,4 +28,8 @@
     <string name="reviews">Reviews</string>
     <string name="original_title">Original title</string>
     <string name="genres">Genre(s)</string>
+    <string name="you_could_be_interest_in_genre">You could be interest in genre</string>
+    <string name="selected_for_you_of_genre">Selected for you of genre</string>
+    <string name="do_not_miss_of_genre">Don´t miss of the genre</string>
+    <string name="the_new_to_find_out_of_genre">The new to find out of the genre</string>
 </resources>

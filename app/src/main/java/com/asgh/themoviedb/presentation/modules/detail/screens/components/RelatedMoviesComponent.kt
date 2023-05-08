@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.asgh.themoviedb.R
 import com.asgh.themoviedb.data.mapper.toMovie
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.presentation.ui.components.ImageLoading
@@ -51,10 +53,10 @@ fun RelatedMoviesComponent(
             } else {
                 Text(
                     text = when(index) {
-                        0 -> "Podría interesarte del genero ${moviesInGenre.genre.genreName}"
-                        1 -> "Seleccionado para ti del genero ${moviesInGenre.genre.genreName}"
-                        2 -> "No te pierdas del genero ${moviesInGenre.genre.genreName}"
-                        else -> "Nuevo para descubrir del genero ${moviesInGenre.genre.genreName}"
+                        0 -> stringResource(id = R.string.you_could_be_interest_in_genre) + " ${moviesInGenre.genre.genreName}"
+                        1 -> stringResource(id = R.string.selected_for_you_of_genre) + " ${moviesInGenre.genre.genreName}"
+                        2 -> stringResource(id = R.string.do_not_miss_of_genre) + " ${moviesInGenre.genre.genreName}"
+                        else -> stringResource(id = R.string.the_new_to_find_out_of_genre) + " ${moviesInGenre.genre.genreName}"
                     }
                 )
                 LazyRow(Modifier.fillMaxWidth()) {

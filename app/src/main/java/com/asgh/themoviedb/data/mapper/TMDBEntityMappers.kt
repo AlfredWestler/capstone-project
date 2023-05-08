@@ -7,7 +7,6 @@ import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.example.local.entity.TMDBGenreEntity
 import com.example.local.entity.TMDBLatestMovieEntity
 import com.example.local.entity.TMDBMovieEntity
-import com.example.local.relation.TMDBMovieWithGenres
 
 fun TMDBLatestMovieEntity.toLatestMovie() = TMDBLatestMovie(
     adult = adult ?: false,

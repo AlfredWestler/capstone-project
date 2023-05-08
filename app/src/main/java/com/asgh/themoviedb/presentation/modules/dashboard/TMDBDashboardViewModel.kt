@@ -1,6 +1,5 @@
 package com.asgh.themoviedb.presentation.modules.dashboard
 
-import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -89,8 +88,7 @@ class TMDBDashboardViewModel @Inject constructor(
             result.apply {
                 onLoading { _nowPlayingState.value = (TMDBEither.Loading) }
                 onFailure { _nowPlayingState.value = (TMDBEither.Failure(FailureModel(
-                    0
-//                    TMDBApplication.appContext.getString(R.string.generic_error_message)
+                    R.string.generic_error_message
                 ))) }
                 onSuccess { _nowPlayingState.value = (TMDBEither.Success(it)) }
             }
@@ -113,8 +111,7 @@ class TMDBDashboardViewModel @Inject constructor(
             result.apply {
                 onLoading { _latestState.value = (TMDBEither.Loading) }
                 onFailure { _latestState.value = (TMDBEither.Failure(FailureModel(
-                    0
-//                    TMDBApplication.appContext.getString(R.string.generic_error_message)
+                    R.string.generic_error_message
                 ))) }
                 onSuccess { _latestState.value = (TMDBEither.Success(it)) }
             }

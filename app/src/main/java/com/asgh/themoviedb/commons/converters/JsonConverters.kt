@@ -10,6 +10,6 @@ fun <T> toJson(obj: T): String {
 }
 
 fun <T> String.fromJson(type: Class<T>): T? {
-    val jsonAdapter = moshi.adapter<T>(type)
+    val jsonAdapter = moshi.adapter(type)
     return jsonAdapter.fromJson(this)
 }

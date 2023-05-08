@@ -54,7 +54,6 @@ fun TheMovieDBTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compos
 fun TMDBSystemBars(
     color: Color,
     addScrim: Boolean = false,
-    darkIcons: Boolean = false,
     makeTranslucent: Boolean = false
 ) {
     val context = LocalContext.current
@@ -65,7 +64,7 @@ fun TMDBSystemBars(
 
     systemUi.setSystemBarsColor(
         result,
-        darkIcons = if(darkIcons) true else color.luminance() > 0.5f
+        darkIcons = color.luminance() > 0.5f
     ) { it.copy(alpha = 0.3f) }
     if(makeTranslucent) {
         (context as? Activity)?.window?.setFlags(

@@ -22,7 +22,7 @@ class TMDBDetailVM @Inject constructor(
     private val dispatcher: CoroutineDispatcher,
     private val useCase: TMDBGenreUseCase,
     private val movieUseCase: TMDBMovieUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
     var movieId = savedStateHandle.get<String>("movie")

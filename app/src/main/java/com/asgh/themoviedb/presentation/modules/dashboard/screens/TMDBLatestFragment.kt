@@ -37,7 +37,7 @@ class TMDBLatestFragment : Fragment() {
                                     .load(it.poster_path)
                                     .fit().into(binding.mainCover)
                                 tagsText.text = it.tags()
-                                titleText.text = "${it.title} (${it.original_title})"
+                                titleText.text = it.title + it.original_title
                                 overviewText.text = it.overview
                             }
                         }

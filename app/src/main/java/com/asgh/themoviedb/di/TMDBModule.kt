@@ -9,7 +9,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)

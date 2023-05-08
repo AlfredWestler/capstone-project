@@ -160,7 +160,7 @@ class TMDBDashboardViewModelTest {
         val latestState = sut.latestState.value
         nowPlayingState.let {
             Truth.assertThat(it).isInstanceOf(TMDBEither::class.java)
-            Truth.assertThat(it).isEqualTo(TMDBEither.Failure(FailureModel(0)))
+            Truth.assertThat(it).isEqualTo(TMDBEither.Failure(FailureModel(R.string.generic_error_message)))
         }
         topRatedSate.let {
             Truth.assertThat(it).isInstanceOf(TMDBEither::class.java)
@@ -168,7 +168,7 @@ class TMDBDashboardViewModelTest {
         }
         latestState.let {
             Truth.assertThat(it).isInstanceOf(TMDBEither::class.java)
-            Truth.assertThat(it).isEqualTo(TMDBEither.Failure(FailureModel(0)))
+            Truth.assertThat(it).isEqualTo(TMDBEither.Failure(FailureModel(R.string.generic_error_message)))
         }
     }
 }

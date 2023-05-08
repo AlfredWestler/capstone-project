@@ -3,7 +3,6 @@ package com.asgh.themoviedb.data.mapper
 import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.asgh.themoviedb.domain.model.TMDBMovie
-import com.asgh.themoviedb.domain.model.TMDBTvShow
 import com.example.local.entity.TMDBGenreEntity
 import com.example.local.entity.TMDBLatestMovieEntity
 import com.example.local.entity.TMDBMovieEntity
@@ -68,10 +67,6 @@ fun TMDBLatestMovieResponse.toLatestMovieEntity() = TMDBLatestMovieEntity(
 
 fun TMDBMovieSeriesResponse.toMovies(): List<TMDBMovie> {
     return results?.map { it.toMovie() } ?: emptyList()
-}
-
-fun TMDBMovieSeriesResponse.toTvShows(): List<TMDBTvShow> {
-    return results?.map { it.toTvShow() } ?: emptyList()
 }
 
 fun TMDBMovieSeriesResponse.toMovieEntity(type: String): List<TMDBMovieEntity> {
