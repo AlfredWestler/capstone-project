@@ -3,10 +3,11 @@ package com.asgh.themoviedb.presentation.modules.dashboard
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.asgh.themoviedb.BuildConfig
 import com.asgh.themoviedb.commons.either.FailureModel
 import com.asgh.themoviedb.commons.either.TMDBEither
 import com.asgh.themoviedb.commons.either.isSuccess
+import com.asgh.themoviedb.data.mapper.toLatestMovie
+import com.asgh.themoviedb.data.mapper.toMovies
 import com.asgh.themoviedb.domain.model.TMDBLatestMovie
 import com.asgh.themoviedb.domain.model.TMDBMovie
 import com.asgh.themoviedb.domain.use_case.TMDBLatestUseCase
@@ -87,7 +88,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _nowPlayingState.postValue(TMDBEither.Failure(
-                        FailureModel("Looks like the aliens abducted this info")
+                        FailureModel(0)
                     ))
                 }
             )
@@ -104,7 +105,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _latestState.postValue(TMDBEither.Failure(
-                        FailureModel(it.message.orEmpty())
+                        FailureModel(0)
                     ))
                 }
             )
@@ -121,7 +122,7 @@ class TMDBDashboardRxViewModel @Inject constructor(
                 },
                 {
                     _topRatedState.postValue(TMDBEither.Failure(
-                        FailureModel(it.message.orEmpty())
+                        FailureModel(0)
                     ))
                 }
             )

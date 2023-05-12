@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.palette.graphics.Palette
 import com.asgh.themoviedb.presentation.ui.components.ImageLoading
 import com.asgh.themoviedb.presentation.ui.components.LoadImageFailure
+import com.asgh.themoviedb.presentation.ui.components.ShimmerAnimation
 import com.skydoves.landscapist.glide.GlideImage
 import com.skydoves.landscapist.palette.BitmapPalette
 import kotlin.math.min
@@ -30,6 +31,7 @@ import kotlin.math.min
 fun ParallaxContent(
     image: String,
     headerText: String,
+    isLoading: Boolean,
     content: @Composable (ScrollState) -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -52,17 +54,21 @@ fun ParallaxContent(
                     },
                 contentAlignment = Alignment.Center
             ) {
-                GlideImage(
-                    modifier = Modifier.fillMaxSize(),
-                    imageModel = image,
-                    contentScale = ContentScale.FillBounds,
-                    loading = { ImageLoading(Modifier.fillMaxSize()) },
-                    failure = { LoadImageFailure(Modifier.fillMaxSize()) },
-                    bitmapPalette = BitmapPalette {
-                        palette = it
-                        color = Color(it.dominantSwatch?.rgb ?: 0)
-                    },
-                )
+                if(isLoading) {
+                    ImageLoading(Modifier.fillMaxSize())
+                } else {
+                    GlideImage(
+                        modifier = Modifier.fillMaxSize(),
+                        imageModel = image,
+                        contentScale = ContentScale.FillBounds,
+                        loading = { ImageLoading(Modifier.fillMaxSize()) },
+                        failure = { LoadImageFailure(Modifier.fillMaxSize()) },
+                        bitmapPalette = BitmapPalette {
+                            palette = it
+                            color = Color(it.dominantSwatch?.rgb ?: 0)
+                        },
+                    )
+                }
             }
             content(scrollState)
         }
@@ -73,18 +79,24 @@ fun ParallaxContent(
                 .background(color),
             contentAlignment = Alignment.BottomCenter
         ) {
-            Text(
-                text = headerText,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 10.dp, top = 40.dp),
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.W900,
-                    color = if(color.luminance() > 0.5f) Color.Black else Color.White
-                ),
-                textAlign = TextAlign.Center
-            )
+            if(isLoading) {
+                ShimmerAnimation {
+                    Box(Modifier.fillMaxWidth().height(80.dp).background(it))
+                }
+            } else {
+                Text(
+                    text = headerText,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .padding(bottom = 10.dp, top = 40.dp),
+                    style = TextStyle(
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.W900,
+                        color = if(color.luminance() > 0.5f) Color.Black else Color.White
+                    ),
+                    textAlign = TextAlign.Center
+                )
+            }
         }
     }
 }

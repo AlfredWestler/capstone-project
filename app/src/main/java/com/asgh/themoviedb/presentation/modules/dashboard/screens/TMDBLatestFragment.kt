@@ -6,17 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.asgh.themoviedb.BuildConfig
+import androidx.lifecycle.lifecycleScope
 import com.asgh.themoviedb.R
 import com.asgh.themoviedb.databinding.TmdbLatestFragmentBinding
-import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardRxViewModel
 import com.asgh.themoviedb.presentation.modules.dashboard.TMDBDashboardViewModel
 import com.squareup.picasso.Picasso
 
 class TMDBLatestFragment : Fragment() {
 
     private lateinit var binding: TmdbLatestFragmentBinding
-//    private val vm: TMDBDashboardRxViewModel by activityViewModels()
     private val vm: TMDBDashboardViewModel by activityViewModels()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,16 +28,18 @@ class TMDBLatestFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(vm) {
-            latestState.observe(viewLifecycleOwner) { result ->
-                result.apply {
-                    onSuccess {
-                        binding.apply {
-                            Picasso.get()
-                                .load(it.poster_path)
-                                .fit().into(binding.mainCover)
-                            tagsText.text = it.tags()
-                            titleText.text = "${it.title} (${it.original_title})"
-                            overviewText.text = it.overview
+            lifecycleScope.launchWhenCreated {
+                latestState.collect { result ->
+                    result.apply {
+                        onSuccess {
+                            binding.apply {
+                                Picasso.get()
+                                    .load(it.poster_path)
+                                    .fit().into(binding.mainCover)
+                                tagsText.text = it.tags()
+                                titleText.text = it.title + it.original_title
+                                overviewText.text = it.overview
+                            }
                         }
                     }
                 }

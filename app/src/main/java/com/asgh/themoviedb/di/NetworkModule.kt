@@ -2,7 +2,7 @@ package com.asgh.themoviedb.di
 
 import com.asgh.themoviedb.commons.retrofit.RetrofitConstants
 import com.asgh.themoviedb.commons.retrofit.TMDBInterceptor
-import com.asgh.themoviedb.data.remote.api.TMDBMovieApi
+import com.example.remote.api.TMDBMovieApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

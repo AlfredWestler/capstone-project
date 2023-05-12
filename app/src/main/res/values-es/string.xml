@@ -28,4 +28,8 @@
     <string name="reviews">Reseñas</string>
     <string name="original_title">Titulo original</string>
     <string name="genres">Genero(s)</string>
+    <string name="you_could_be_interest_in_genre">Podría interesarte del genero</string>
+    <string name="selected_for_you_of_genre">Seleccionado para ti del genero</string>
+    <string name="do_not_miss_of_genre">No te pierdas del genero</string>
+    <string name="the_new_to_find_out_of_genre">Lo nuevo para descubrir del genero</string>
 </resources>
